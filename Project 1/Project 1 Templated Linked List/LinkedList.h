@@ -202,22 +202,22 @@ void LinkedList<T>::AddTail(const T& data) {
 }
 
 template<typename T>
-LinkedList<T>::Node* LinkedList<T>::Head() {
+typename LinkedList<T>::Node* LinkedList<T>::Head() {
 	return head;
 }
 
 template<typename T>
-const LinkedList<T>::Node* LinkedList<T>::Head() const {
+typename const LinkedList<T>::Node* LinkedList<T>::Head() const {
 	return head;
 }
 
 template<typename T>
-LinkedList<T>::Node* LinkedList<T>::Tail() {
+typename LinkedList<T>::Node* LinkedList<T>::Tail() {
 	return tail;
 }
 
 template<typename T>
-const LinkedList<T>::Node* LinkedList<T>::Tail() const {
+typename const LinkedList<T>::Node* LinkedList<T>::Tail() const {
 	return tail;
 }
 
@@ -230,5 +230,10 @@ bool LinkedList<T>::RemoveHead() {
 		return true;
 	}
 	//Should this delete a single node, which is the head?
+	return false;
+}
+
+template<typename T>
+bool LinkedList<T>::RemoveTail() {
 	return false;
 }
