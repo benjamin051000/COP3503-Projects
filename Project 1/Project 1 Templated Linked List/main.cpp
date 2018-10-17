@@ -25,18 +25,18 @@ int main() {
 	else if (testNum == 3)
 		TestBrackets();
 	/*else if (testNum == 4)
-		TestRemove();
+		TestRemove();*/
 	else if (testNum == 5)
 		TestRemoveHeadTail();
-	else if (testNum == 6)
+	/*else if (testNum == 6)
 		TestOtherRemoval();
 	else if (testNum == 7)
 		TestAddingArrays();
 	else if (testNum == 8)
-		TestFindAll();
-	else if (testNum == 9)
-		TestFind();
-	else if (testNum == 10)
+		TestFindAll();*/
+	/*else if (testNum == 9)
+		TestFind();*/
+	/*else if (testNum == 10)
 		TestInsertAt();*/
 
 	return 0;
@@ -254,7 +254,7 @@ void TestRemoveHeadTail() {
 //		cout << endl;
 //	}
 //}
-//
+////
 //void TestFind() {
 //	cout << "=====Testing Find()/GetNode() and InsertBefore()/InsertAfter() functionality=====" << endl;
 //	LinkedList<int> data;
@@ -267,7 +267,7 @@ void TestRemoveHeadTail() {
 //	cout << "Initial list: " << endl;
 //	data.PrintForward();
 //
-//	LinkedList<int>::Node * node = data.Find(10);
+//	LinkedList<int>::Node* node = data.Find(10);
 //	cout << "\nSearching for node with value of 10..." << endl;
 //
 //	if (node != nullptr) {
@@ -299,7 +299,7 @@ void TestRemoveHeadTail() {
 //	if (node == nullptr)
 //		cout << "Node not found, nullptr returned." << endl;
 //}
-//
+
 //void TestInsertAt() {
 //	cout << "=====Testing InsertAt() functionality=====" << endl;
 //	LinkedList<string> data;

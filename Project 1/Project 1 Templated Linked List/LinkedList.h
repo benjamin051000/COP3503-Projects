@@ -4,35 +4,35 @@
 using namespace std;
 
 template<typename T>
-class LinkedList {
+struct LinkedList {
 
-	struct Node {
+	struct Node { //move methods outside?
 		T data;
 		Node* next;
-		Node* previous;
+		Node* prev;
 
 		bool hasNext() {
 			return next != nullptr;
 		}
 
-		bool hasPrevious() {
-			return next != nullptr;
+		bool hasPrev() {
+			return prev != nullptr;
 		}
 
 		Node() { 
 			next = nullptr;
-			previous = nullptr;
+			prev = nullptr;
 		}
 
 		~Node() { 
 			//delete next; //maybe we shouldn't delete this, since we need it to delete the following nodes?
-			//delete previous;
+			//delete prev;
 		}
 
 		Node(T input) { //Is this necessary? Creates a node with data and no connections.
 			data = input;
 			next = nullptr;
-			previous = nullptr;
+			prev = nullptr;
 		}
 	};
 
@@ -43,7 +43,7 @@ class LinkedList {
 	void set(const LinkedList& rhs);
 	T& getElement(unsigned int i);
 	
-public:
+//public:
 	/*=====Construction/Destruction=====*/
 	LinkedList();
 	~LinkedList();
@@ -116,13 +116,13 @@ LinkedList<T>::LinkedList() {
 
 template<typename T>
 LinkedList<T>::~LinkedList() {
-	////delete all the nodes
-	//Node* currentNode = head;
-	//while (currentNode->hasNext()) {
-	//	currentNode = currentNode->next;
-	//	delete currentNode->previous;
-	//}
-	//delete currentNode;
+	//delete all the nodes
+	Node* currentNode = head;
+	while (currentNode->hasNext()) {
+		currentNode = currentNode->next;
+		delete currentNode->prev;
+		//delete currentNode->prev->next;
+	}
 }
 
 template<typename T>
@@ -160,17 +160,58 @@ void LinkedList<T>::PrintForward() const {
 template<typename T>
 void LinkedList<T>::PrintReverse() const {
 	Node* currentNode = tail;
-	while (currentNode->hasPrevious()) {
+	while (currentNode->hasPrev()) {
 		cout << currentNode->data << endl;
-		currentNode = currentNode->previous;
+		currentNode = currentNode->prev;
 	}
 	//Then, print the last node.
-	cout << currentNode->previous << endl;
+	cout << currentNode->data << endl;
 }
 
 template<typename T>
 unsigned int LinkedList<T>::NodeCount() const {
 	return listSize;
+}
+
+template<typename T>
+void LinkedList<T>::FindAll(vector<Node*>& outData, const T& value) const {
+	Node* current = head;
+	while (current->hasNext()) { //Probably won't check the last Node
+		if (current->data == value) {
+			outData.push_back(current);
+		}
+		current = current->next;
+	}
+}
+
+template<typename T>
+typename const LinkedList<T>::Node* LinkedList<T>::Find(const T &data) const {
+	Node* current = head;
+	while (current->hasNext()) {
+		if (current->data == data) {
+			return current;
+		}
+		current = current->next;
+	}
+
+	return nullptr;
+}
+
+template<typename T>
+typename LinkedList<T>::Node* LinkedList<T>::Find(const T & data) {
+	Node* currentNode = head;
+	while (currentNode->hasNext()) {
+		if (currentNode->data == data) {
+			return currentNode;
+		}
+		currentNode = currentNode->next;
+	}
+	return nullptr;
+}
+
+template<typename T>
+typename const LinkedList<T>::Node* LinkedList<T>::GetNode(unsigned int index) const {
+	return NULL;
 }
 
 template<typename T>
@@ -180,9 +221,9 @@ void LinkedList<T>::AddHead(const T& data) {
 		tail = head; //&head ?
 	}
 	else {
-		head->previous = new Node(data);
-		//head->previous->next = head; //uh does this actually work
-		head  = head->previous; //&tail->next ?
+		head->prev = new Node(data);
+		head->prev->next = head; //broken
+		head  = head->prev;
 	}
 	listSize++;
 }
@@ -195,10 +236,15 @@ void LinkedList<T>::AddTail(const T& data) {
 	}
 	else {
 		tail->next = new Node(data);
-		//tail->next->previous = tail; //uh does this actually work
+		tail->next->prev = tail; //broken
 		tail = tail->next;
 	}
 	listSize++;
+}
+
+template<typename T>
+typename LinkedList<T>::Node* LinkedList<T>::GetNode(unsigned int index) {
+	return NULL;
 }
 
 template<typename T>
@@ -225,8 +271,8 @@ template<typename T>
 bool LinkedList<T>::RemoveHead() { 
 	if (head->hasNext()) {
 		head = head->next;
-		delete head->previous;
-		head->previous = nullptr;
+		delete head->prev;
+		head->prev = nullptr;
 		return true;
 	}
 	//Should this delete a single node, which is the head?
@@ -235,5 +281,11 @@ bool LinkedList<T>::RemoveHead() {
 
 template<typename T>
 bool LinkedList<T>::RemoveTail() {
+	if (tail->hasPrev()) {
+		tail = tail->prev;
+		delete tail->next;
+		tail->next = nullptr;
+		return true;
+	}
 	return false;
 }
