@@ -29,7 +29,7 @@ struct LinkedList {
 			//delete prev;
 		}
 
-		Node(T input) { //Is this necessary? Creates a node with data and no connections.
+		Node(T input) {
 			data = input;
 			next = nullptr;
 			prev = nullptr;
@@ -176,7 +176,7 @@ unsigned int LinkedList<T>::NodeCount() const {
 template<typename T>
 void LinkedList<T>::FindAll(vector<Node*>& outData, const T& value) const {
 	Node* current = head;
-	while (current->hasNext()) { //Probably won't check the last Node
+	while (current != nullptr) { //Probably won't check the last Node
 		if (current->data == value) {
 			outData.push_back(current);
 		}
@@ -288,4 +288,27 @@ bool LinkedList<T>::RemoveTail() {
 		return true;
 	}
 	return false;
+}
+
+template<typename T>
+unsigned int LinkedList<T>::Remove(const T& data) {
+	int index = 0, numRemoved = 0;
+	Node* current = head;
+	while (current->hasNext()) {
+		if (current->data == data) {
+			RemoveAt(index);
+			numRemoved++;
+		}
+		current = current->next;
+		index++;
+	}
+	return numRemoved;
+}
+
+template<typename T>
+bool LinkedList<T>::RemoveAt(int index) {
+	Node* toBeRemoved = this[index]; //Cannot convert from LL<string> to LL<string>::Node*
+	toBeRemoved->prev->next = toBeRemoved->next;
+	toBeRemoved->next->prev = toBeRemoved->prev;
+	delete toBeRemoved; //maybe
 }
