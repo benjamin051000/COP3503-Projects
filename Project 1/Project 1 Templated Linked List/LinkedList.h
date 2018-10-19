@@ -6,7 +6,7 @@ using namespace std;
 template<typename T>
 struct LinkedList {
 
-	struct Node { //move methods outside?
+	struct Node {
 		T data;
 		Node* next;
 		Node* prev;
@@ -41,9 +41,7 @@ struct LinkedList {
 	Node* tail;
 
 	void set(const LinkedList& rhs);
-	T& getElement(unsigned int i);
 	
-//public:
 	/*=====Construction/Destruction=====*/
 	LinkedList();
 	~LinkedList();
@@ -76,7 +74,7 @@ struct LinkedList {
 	bool RemoveHead();
 	bool RemoveTail();
 	unsigned int Remove(const T& data);
-	bool RemoveAt(int index);
+	bool RemoveAt(unsigned int index);
 	void Clear();
 
 	/*=====Operators=====*/
@@ -93,21 +91,6 @@ void LinkedList<T>::set(const LinkedList& rhs) {
 }
 
 template<typename T>
-T& LinkedList<T>::getElement(unsigned int index) {
-	Node* node = head;
-
-	//If index is out of bounds...
-	if (index >= listSize) {
-		throw -1;
-	}
-	//Iterate through the Linked List to get to the right node
-	for (unsigned int i = 0; i < index; i++) {
-			node = node->next;
-	}
-	return node->data;
-}
-
-template<typename T>
 LinkedList<T>::LinkedList() {
 	listSize = 0;
 	head = nullptr;
@@ -116,12 +99,12 @@ LinkedList<T>::LinkedList() {
 
 template<typename T>
 LinkedList<T>::~LinkedList() {
-	//delete all the nodes
-	Node* currentNode = head;
-	while (currentNode->hasNext()) {
-		currentNode = currentNode->next;
-		delete currentNode->prev;
-		//delete currentNode->prev->next;
+	//store a pointer to the next one
+	//delete everything else
+	Node* current = head;
+	while (current != nullptr) {
+		delete current->prev;
+		current = current->next;
 	}
 }
 
@@ -132,12 +115,25 @@ LinkedList<T>::LinkedList(const LinkedList& rhs) {
 
 template<typename T>
 const T& LinkedList<T>::operator[](unsigned int index) const {
-	return getElement(index);
+	return GetNode(index)->data;
 }
 
 template<typename T>
 T& LinkedList<T>::operator[](unsigned int index) {
-	return getElement(index);
+	return GetNode(index)->data;
+}
+
+template<typename T>
+bool LinkedList<T>::operator==(const LinkedList<T>& rhs) const {
+	if (this->listSize != rhs->listSize) {
+		return false;
+	}
+	for (int i = 0; i < this->listSize; i++) {
+		if (this[i]->data != rhs[i]->data) {
+			return false;
+		}
+	}
+	return true;
 }
 
 template<typename T>
@@ -185,7 +181,7 @@ void LinkedList<T>::FindAll(vector<Node*>& outData, const T& value) const {
 }
 
 template<typename T>
-typename const LinkedList<T>::Node* LinkedList<T>::Find(const T &data) const {
+const typename LinkedList<T>::Node* LinkedList<T>::Find(const T &data) const {
 	Node* current = head;
 	while (current->hasNext()) {
 		if (current->data == data) {
@@ -210,8 +206,20 @@ typename LinkedList<T>::Node* LinkedList<T>::Find(const T & data) {
 }
 
 template<typename T>
-typename const LinkedList<T>::Node* LinkedList<T>::GetNode(unsigned int index) const {
-	return NULL;
+const typename LinkedList<T>::Node* LinkedList<T>::GetNode(unsigned int index) const {
+	Node* node = head;
+
+	//If index is out of bounds...
+	if (index >= listSize) {
+		throw - 1;
+	}
+
+	//Iterate through the Linked List to get to the right node
+	for (unsigned int i = 0; i < index; i++) {
+		node = node->next;
+	}
+
+	return node;
 }
 
 template<typename T>
@@ -243,8 +251,85 @@ void LinkedList<T>::AddTail(const T& data) {
 }
 
 template<typename T>
+void LinkedList<T>::AddNodesHead(const T* data, unsigned int count) {
+	for (int i = 0; i < count; i++) {
+		AddHead(data[i]);
+	}
+}
+
+template<typename T>
+void LinkedList<T>::AddNodesTail(const T* data, unsigned int count) {
+	for (int i = 0; i < count; i++) {
+		AddTail(data[i]);
+	}
+}
+
+template<typename T>
+void LinkedList<T>::InsertAfter(Node* node, const T& data) {
+	Node* newNode = new Node(data);
+	if (node->next == nullptr) {
+		node->next = newNode;
+	}
+	else {
+		Node* nextNode = node->next;
+		node->next = newNode;
+		newNode->prev = node;
+		
+		newNode->next = nextNode;
+		if (nextNode != nullptr) {
+			nextNode->prev = newNode;
+		}
+	}
+	listSize++;
+}
+
+template<typename T>
+void LinkedList<T>::InsertBefore(Node* node, const T& data) {
+	Node* newNode = new Node(data);
+	if (node->prev == nullptr) {
+		node->prev = newNode;
+	}
+	else {
+		Node* prevNode = node->prev;
+		node->prev = newNode;
+		newNode->next = node;
+
+		newNode->prev = prevNode;
+		if (prevNode != nullptr) {
+			prevNode->next = newNode;
+		}
+	}
+	listSize++;
+}
+
+template<typename T>
+void LinkedList<T>::InsertAt(const T& data, unsigned int index) {
+	//This will actually insert it at index - 1.
+	if (index > listSize) {
+		throw -1;
+	}
+
+	Node* newNode = new Node(data);
+	//use another method
+	//InsertAfter();
+	delete newNode;
+}
+
+template<typename T>
 typename LinkedList<T>::Node* LinkedList<T>::GetNode(unsigned int index) {
-	return NULL;
+	Node* node = head;
+
+	//If index is out of bounds...
+	if (index >= listSize) {
+		throw -1;
+	}
+
+	//Iterate through the Linked List to get to the right node
+	for (unsigned int i = 0; i < index; i++) {
+		node = node->next;
+	}
+
+	return node;
 }
 
 template<typename T>
@@ -253,7 +338,7 @@ typename LinkedList<T>::Node* LinkedList<T>::Head() {
 }
 
 template<typename T>
-typename const LinkedList<T>::Node* LinkedList<T>::Head() const {
+const typename LinkedList<T>::Node* LinkedList<T>::Head() const {
 	return head;
 }
 
@@ -263,7 +348,7 @@ typename LinkedList<T>::Node* LinkedList<T>::Tail() {
 }
 
 template<typename T>
-typename const LinkedList<T>::Node* LinkedList<T>::Tail() const {
+const typename LinkedList<T>::Node* LinkedList<T>::Tail() const {
 	return tail;
 }
 
@@ -292,23 +377,42 @@ bool LinkedList<T>::RemoveTail() {
 
 template<typename T>
 unsigned int LinkedList<T>::Remove(const T& data) {
-	int index = 0, numRemoved = 0;
+	unsigned int numRemoved = 0;
 	Node* current = head;
-	while (current->hasNext()) {
+
+	while (current != nullptr) {
 		if (current->data == data) {
-			RemoveAt(index);
+			//remove it
+			Node* nextNode = current->next;
+			Node* prevNode = current->prev;
+			prevNode->next = nextNode;
+			nextNode->prev = prevNode;
+
+			delete current;
+
 			numRemoved++;
+			current = nextNode;
 		}
-		current = current->next;
-		index++;
+		else {
+			current = current->next;
+		}
 	}
 	return numRemoved;
 }
 
 template<typename T>
-bool LinkedList<T>::RemoveAt(int index) {
-	Node* toBeRemoved = this[index]; //Cannot convert from LL<string> to LL<string>::Node*
-	toBeRemoved->prev->next = toBeRemoved->next;
-	toBeRemoved->next->prev = toBeRemoved->prev;
-	delete toBeRemoved; //maybe
+bool LinkedList<T>::RemoveAt(unsigned int index) { //broken!
+	
+	Node* current = GetNode(index); //Cannot convert from LL<string> to LL<string>::Node*
+	
+	if (current->hasNext() && current->hasPrev()) {
+		Node* nextNode = current->next;
+		Node* prevNode = current->prev;
+		prevNode->next = nextNode;
+		nextNode->prev = prevNode;
+	}
+
+	delete current;
+
+	return true;
 }

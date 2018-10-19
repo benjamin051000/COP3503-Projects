@@ -7,12 +7,12 @@ using namespace std;
 void TestAddHead();
 void TestAddTail();
 void TestBrackets();
-//void TestRemove(); //Has that string conversion error
+void TestRemove(); //Has that string conversion error
 void TestRemoveHeadTail();
-//void TestOtherRemoval(); //Has string conversion error
+void TestOtherRemoval(); //Has string conversion error
 //void TestAddingArrays(); //String conv. error
 void TestFindAll();
-//void TestFind(); //Requires Node constructor
+void TestFind(); //Requires Node constructor
 //void TestInsertAt(); //String conv. error
 
 int main() {
@@ -24,18 +24,18 @@ int main() {
 		TestAddTail();
 	else if (testNum == 3)
 		TestBrackets();
-	/*else if (testNum == 4)
-		TestRemove();*/
+	else if (testNum == 4)
+		TestRemove();
 	else if (testNum == 5)
 		TestRemoveHeadTail();
-	/*else if (testNum == 6)
-		TestOtherRemoval();*/
+	else if (testNum == 6)
+		TestOtherRemoval();
 	/*else if (testNum == 7)
 		TestAddingArrays();*/
 	else if (testNum == 8)
 		TestFindAll();
-	/*else if (testNum == 9)
-		TestFind();*/
+	else if (testNum == 9)
+		TestFind();
 	/*else if (testNum == 10)
 		TestInsertAt();*/
 
@@ -92,31 +92,31 @@ void TestBrackets() {
 	list.PrintForward();
 }
 
-//void TestRemove() {
-//	cout << "=====Testing Remove() functionality=====" << endl;
-//	LinkedList<string> data;
-//	string test = "Test RemoveMe to RemoveMe find RemoveMe all RemoveMe matching ";
-//	test.append("RemoveMe nodes RemoveMe completed RemoveMe with RemoveMe no ");
-//	test.append("RemoveMe \"RemoveMe\" RemoveMe nodes RemoveMe remaining.");
-//	stringstream x(test);
-//	string tmp;
-//	while (getline(x, tmp, ' '))
-//		data.AddTail(tmp);
-//
-//	cout << "Initial list: " << endl;
-//	data.PrintForward();
-//	string val = "RemoveMe";
-//	int count = data.Remove(val);
-//	cout << "\nRemoving " << val << " from the list." << endl;
-//	cout << "Removed " << count << " nodes from the list.\n" << endl;
-//	data.PrintForward();
-//	cout << "\nNodes removed: " << count << endl;
-//
-//	count = data.Remove(val);
-//	cout << "Removing " << val << " from the list again." << endl;
-//	cout << "Nodes removed: " << count << endl;
-//
-//}
+void TestRemove() {
+	cout << "=====Testing Remove() functionality=====" << endl;
+	LinkedList<string> data;
+	string test = "Test RemoveMe to RemoveMe find RemoveMe all RemoveMe matching ";
+	test.append("RemoveMe nodes RemoveMe completed RemoveMe with RemoveMe no ");
+	test.append("RemoveMe \"RemoveMe\" RemoveMe nodes RemoveMe remaining.");
+	stringstream x(test);
+	string tmp;
+	while (getline(x, tmp, ' '))
+		data.AddTail(tmp);
+
+	cout << "Initial list: " << endl;
+	data.PrintForward();
+	string val = "RemoveMe";
+	int count = data.Remove(val);
+	cout << "\nRemoving " << val << " from the list." << endl;
+	cout << "Removed " << count << " nodes from the list.\n" << endl;
+	data.PrintForward();
+	cout << "\nNodes removed: " << count << endl;
+
+	count = data.Remove(val);
+	cout << "Removing " << val << " from the list again." << endl;
+	cout << "Nodes removed: " << count << endl;
+
+}
 
 void TestRemoveHeadTail() {
 	cout << "=====Testing RemoveHead()/RemoveTail() functionality=====" << endl;
@@ -135,57 +135,57 @@ void TestRemoveHeadTail() {
 	data.PrintForward();
 }
 
-//void TestOtherRemoval() {
-//	cout << "=====Testing RemoveAt() and clearing with RemoveHead()/RemoveTail() functionality=====" << endl;
-//	LinkedList<string> data;
-//	data.AddTail("Batman");
-//	data.AddTail("RemoveMe");
-//	data.AddTail("Superman");
-//	data.AddTail("RemoveMe");
-//	data.AddTail("Wonder Woman");
-//	data.AddTail("RemoveMe");
-//	data.AddTail("The Flash");
-//
-//	cout << "Initial list: " << endl;
-//	data.PrintForward();
-//	cout << "\nRemoving using RemoveAt()..." << endl;
-//	data.RemoveAt(1);
-//	data.RemoveAt(2);
-//	data.RemoveAt(3);
-//
-//	data.PrintForward();
-//
-//	cout << "\nAttempting to remove out of range using RemoveAt()..." << endl;
-//	if (!data.RemoveAt(100))
-//		cout << "Attempt to RemoveAt(100) failed." << endl;
-//	else
-//		cout << "Successfully removed node 100? Weird, there are only 4 nodes..." << endl;
-//
-//	cout << "\nClearing list using RemoveHead()..." << endl;
-//	while (data.RemoveHead()) {}
-//
-//	if (data.NodeCount() == 0)
-//		cout << "List is empty!" << endl;
-//	else
-//		cout << "List not empty!" << endl;
-//
-//	cout << "Adding additional nodes..." << endl;
-//	data.AddTail("Robin");
-//	data.AddTail("Batgirl");
-//	data.AddTail("Nightwing");
-//	data.AddTail("Red Hood");
-//	data.AddTail("Bluebird");
-//
-//	data.PrintForward();
-//
-//	cout << "Clearing list using RemoveTail()..." << endl;
-//	while (data.RemoveTail()) {}
-//
-//	if (data.NodeCount() == 0)
-//		cout << "List is empty!" << endl;
-//	else
-//		cout << "List not empty!" << endl;
-//}
+void TestOtherRemoval() {
+	cout << "=====Testing RemoveAt() and clearing with RemoveHead()/RemoveTail() functionality=====" << endl;
+	LinkedList<string> data;
+	data.AddTail("Batman");
+	data.AddTail("RemoveMe");
+	data.AddTail("Superman");
+	data.AddTail("RemoveMe");
+	data.AddTail("Wonder Woman");
+	data.AddTail("RemoveMe");
+	data.AddTail("The Flash");
+
+	cout << "Initial list: " << endl;
+	data.PrintForward();
+	cout << "\nRemoving using RemoveAt()..." << endl;
+	data.RemoveAt(1);
+	data.RemoveAt(2);
+	data.RemoveAt(3);
+
+	data.PrintForward();
+
+	cout << "\nAttempting to remove out of range using RemoveAt()..." << endl;
+	if (!data.RemoveAt(100))
+		cout << "Attempt to RemoveAt(100) failed." << endl;
+	else
+		cout << "Successfully removed node 100? Weird, there are only 4 nodes..." << endl;
+
+	cout << "\nClearing list using RemoveHead()..." << endl;
+	while (data.RemoveHead()) {}
+
+	if (data.NodeCount() == 0)
+		cout << "List is empty!" << endl;
+	else
+		cout << "List not empty!" << endl;
+
+	cout << "Adding additional nodes..." << endl;
+	data.AddTail("Robin");
+	data.AddTail("Batgirl");
+	data.AddTail("Nightwing");
+	data.AddTail("Red Hood");
+	data.AddTail("Bluebird");
+
+	data.PrintForward();
+
+	cout << "Clearing list using RemoveTail()..." << endl;
+	while (data.RemoveTail()) {}
+
+	if (data.NodeCount() == 0)
+		cout << "List is empty!" << endl;
+	else
+		cout << "List not empty!" << endl;
+}
 
 //void TestAddingArrays() {
 //	cout << "=====Testing AddNodesHead() and AddNodesTail() =====" << endl;
@@ -255,50 +255,50 @@ void TestFindAll() {
 	}
 }
 
-//void TestFind() {
-//	cout << "=====Testing Find()/GetNode() and InsertBefore()/InsertAfter() functionality=====" << endl;
-//	LinkedList<int> data;
-//	data.AddTail(10);
-//	data.AddHead(9);
-//	data.AddTail(11);
-//	data.AddHead(8);
-//	data.AddTail(12);
-//
-//	cout << "Initial list: " << endl;
-//	data.PrintForward();
-//
-//	LinkedList<int>::Node* node = data.Find(10);
-//	cout << "\nSearching for node with value of 10..." << endl;
-//
-//	if (node != nullptr) {
-//		cout << "Node found! Value: " << node->data << endl;
-//		cout << "Prev value: " << node->prev->data << endl;
-//		cout << "Next value: " << node->next->data << endl;
-//	}
-//	else
-//		cout << "Error! Returned node was a nullptr.";
-//
-//	cout << "\nInserting 2048 before node and 4096 after node." << endl;
-//	data.InsertBefore(node, 2048);
-//	data.InsertAfter(node, 4096);
-//	data.PrintForward();
-//
-//	cout << "\nUsing GetNode() to get the 5th node in the list..." << endl;
-//
-//	node = data.GetNode(4);
-//	if (node != nullptr) {
-//		cout << "Node found! Value: " << node->data << endl;
-//		cout << "Prev value: " << node->prev->data << endl;
-//		cout << "Next value: " << node->next->data << endl;
-//	}
-//	else
-//		cout << "Error! Returned node was a nullptr.";
-//
-//	cout << "\nSearching for node with value of 200..." << endl;
-//	node = data.Find(200);
-//	if (node == nullptr)
-//		cout << "Node not found, nullptr returned." << endl;
-//}
+void TestFind() {
+	cout << "=====Testing Find()/GetNode() and InsertBefore()/InsertAfter() functionality=====" << endl;
+	LinkedList<int> data;
+	data.AddTail(10);
+	data.AddHead(9);
+	data.AddTail(11);
+	data.AddHead(8);
+	data.AddTail(12);
+
+	cout << "Initial list: " << endl;
+	data.PrintForward();
+
+	LinkedList<int>::Node* node = data.Find(10);
+	cout << "\nSearching for node with value of 10..." << endl;
+
+	if (node != nullptr) {
+		cout << "Node found! Value: " << node->data << endl;
+		cout << "Prev value: " << node->prev->data << endl;
+		cout << "Next value: " << node->next->data << endl;
+	}
+	else
+		cout << "Error! Returned node was a nullptr.";
+
+	cout << "\nInserting 2048 before node and 4096 after node." << endl;
+	data.InsertBefore(node, 2048);
+	data.InsertAfter(node, 4096);
+	data.PrintForward();
+
+	cout << "\nUsing GetNode() to get the 5th node in the list..." << endl;
+
+	node = data.GetNode(4);
+	if (node != nullptr) {
+		cout << "Node found! Value: " << node->data << endl;
+		cout << "Prev value: " << node->prev->data << endl;
+		cout << "Next value: " << node->next->data << endl;
+	}
+	else
+		cout << "Error! Returned node was a nullptr.";
+
+	cout << "\nSearching for node with value of 200..." << endl;
+	node = data.Find(200);
+	if (node == nullptr)
+		cout << "Node not found, nullptr returned." << endl;
+}
 
 //void TestInsertAt() {
 //	cout << "=====Testing InsertAt() functionality=====" << endl;
