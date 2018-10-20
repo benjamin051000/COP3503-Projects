@@ -88,6 +88,15 @@ struct LinkedList {
 
 template<typename T>
 void LinkedList<T>::set(const LinkedList& rhs) {
+	Node* current = head;
+
+	rhs->head = this->head;
+	
+	while (current != nullptr) {
+		rhs.AddTail(current->data);
+
+		current = current->next;
+	}
 }
 
 template<typename T>
@@ -135,7 +144,7 @@ bool LinkedList<T>::operator==(const LinkedList<T>& rhs) const {
 	if (this->listSize != rhs->listSize) {
 		return false;
 	}
-	for (int i = 0; i < this->listSize; i++) {
+	for (int i = 0; i < listSize; i++) {
 		if (this[i]->data != rhs[i]->data) {
 			return false;
 		}
@@ -317,10 +326,9 @@ void LinkedList<T>::InsertAt(const T& data, unsigned int index) {
 		throw -1;
 	}
 
-	Node* newNode = new Node(data);
+	//Node* newNode = new Node(data);
 	//use another method
-	//InsertAfter();
-	//delete newNode;
+	InsertAfter(GetNode(index - 1), data); //trash
 }
 
 template<typename T>
@@ -329,7 +337,7 @@ typename LinkedList<T>::Node* LinkedList<T>::GetNode(unsigned int index) {
 
 	//If index is out of bounds...
 	if (index >= listSize) {
-		return false;
+		throw -1;
 	}
 
 	//Iterate through the Linked List to get to the right node
