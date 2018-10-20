@@ -100,12 +100,19 @@ LinkedList<T>::LinkedList() {
 template<typename T>
 LinkedList<T>::~LinkedList() {
 	//store a pointer to the next one
-	//delete everything else
+	//delete what comes before it
 	Node* current = head;
-	while (current != nullptr) {
-		delete current->prev;
-		current = current->next;
+
+	if (current == nullptr) {
+		return;
 	}
+
+	while (current->hasNext()) {
+		current = current->next;
+		delete current->prev;
+	}
+	//finally, delete it
+	delete current;
 }
 
 template<typename T>
@@ -230,7 +237,7 @@ void LinkedList<T>::AddHead(const T& data) {
 	}
 	else {
 		head->prev = new Node(data);
-		head->prev->next = head; //broken
+		head->prev->next = head;
 		head  = head->prev;
 	}
 	listSize++;
@@ -244,7 +251,7 @@ void LinkedList<T>::AddTail(const T& data) {
 	}
 	else {
 		tail->next = new Node(data);
-		tail->next->prev = tail; //broken
+		tail->next->prev = tail;
 		tail = tail->next;
 	}
 	listSize++;
@@ -252,14 +259,15 @@ void LinkedList<T>::AddTail(const T& data) {
 
 template<typename T>
 void LinkedList<T>::AddNodesHead(const T* data, unsigned int count) {
-	for (int i = 0; i < count; i++) {
+	for (int i = count - 1; i >= 0; i--) {
 		AddHead(data[i]);
 	}
+	
 }
 
 template<typename T>
 void LinkedList<T>::AddNodesTail(const T* data, unsigned int count) {
-	for (int i = 0; i < count; i++) {
+	for (unsigned int i = 0; i < count; i++) {
 		AddTail(data[i]);
 	}
 }
@@ -312,7 +320,7 @@ void LinkedList<T>::InsertAt(const T& data, unsigned int index) {
 	Node* newNode = new Node(data);
 	//use another method
 	//InsertAfter();
-	delete newNode;
+	//delete newNode;
 }
 
 template<typename T>
@@ -321,7 +329,7 @@ typename LinkedList<T>::Node* LinkedList<T>::GetNode(unsigned int index) {
 
 	//If index is out of bounds...
 	if (index >= listSize) {
-		throw -1;
+		return false;
 	}
 
 	//Iterate through the Linked List to get to the right node
@@ -353,11 +361,24 @@ const typename LinkedList<T>::Node* LinkedList<T>::Tail() const {
 }
 
 template<typename T>
-bool LinkedList<T>::RemoveHead() { 
-	if (head->hasNext()) {
+bool LinkedList<T>::RemoveHead() {
+	if (listSize == 0) {
+		return false;
+	}
+
+	if (head->hasNext()) { //doesn't delete tail!
 		head = head->next;
 		delete head->prev;
 		head->prev = nullptr;
+
+		listSize--;
+		return true;
+	}
+	if (listSize == 1) {
+		delete head;
+		head = nullptr;
+		tail = nullptr;
+		listSize--;
 		return true;
 	}
 	//Should this delete a single node, which is the head?
@@ -366,10 +387,24 @@ bool LinkedList<T>::RemoveHead() {
 
 template<typename T>
 bool LinkedList<T>::RemoveTail() {
+	if (listSize == 0) {
+		return false;
+	}
+
 	if (tail->hasPrev()) {
 		tail = tail->prev;
 		delete tail->next;
 		tail->next = nullptr;
+
+		listSize--;
+		return true;
+	}
+
+	if (listSize == 1) {
+		delete tail;
+		head = nullptr;
+		tail = nullptr;
+		listSize--;
 		return true;
 	}
 	return false;
@@ -397,12 +432,16 @@ unsigned int LinkedList<T>::Remove(const T& data) {
 			current = current->next;
 		}
 	}
+	listSize -= numRemoved;
 	return numRemoved;
 }
 
 template<typename T>
 bool LinkedList<T>::RemoveAt(unsigned int index) { //broken!
-	
+	if (!GetNode(index)) {
+		return false;
+	}
+
 	Node* current = GetNode(index); //Cannot convert from LL<string> to LL<string>::Node*
 	
 	if (current->hasNext() && current->hasPrev()) {
@@ -411,8 +450,16 @@ bool LinkedList<T>::RemoveAt(unsigned int index) { //broken!
 		prevNode->next = nextNode;
 		nextNode->prev = prevNode;
 	}
-
+	listSize--;
 	delete current;
 
 	return true;
+}
+
+template<typename T>
+void LinkedList<T>::Clear() {
+	while (RemoveHead()) {}
+	listSize = 0;
+	head = nullptr;
+	tail = nullptr;
 }
