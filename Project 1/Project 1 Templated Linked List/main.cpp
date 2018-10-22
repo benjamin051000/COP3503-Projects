@@ -13,7 +13,7 @@ void TestOtherRemoval(); //works
 void TestAddingArrays(); //works
 void TestFindAll(); //works
 void TestFind(); //works
-void TestInsertAt(); 
+void TestInsertAt(); //works
 
 int main() {
 	int testNum;

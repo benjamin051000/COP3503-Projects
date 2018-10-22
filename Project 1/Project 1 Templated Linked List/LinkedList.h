@@ -85,12 +85,15 @@ struct LinkedList {
 
 template<typename T>
 void LinkedList<T>::set(const LinkedList& rhs) {
-	Node* current = head;
+	listSize = 0;
+	head = nullptr;
+	tail = nullptr;
 
-	rhs.head = this->head;
+	this->AddHead(rhs.head->data);
+	Node* current = rhs.head->next;
 	
 	while (current != nullptr) {
-		rhs.AddTail(current->data);
+		this->AddTail(current->data);
 
 		current = current->next;
 	}
@@ -142,8 +145,8 @@ bool LinkedList<T>::operator==(const LinkedList<T>& rhs) const {
 	if (this->listSize != rhs.listSize) {
 		return false;
 	}
-	for (int i = 0; i < listSize; i++) {
-		if (this[i]->data != rhs[i].data) {
+	for (unsigned int i = 0; i < listSize; i++) {
+		if (GetNode(i)->data != rhs.GetNode(i)->data) {
 			return false;
 		}
 	}
@@ -281,23 +284,8 @@ void LinkedList<T>::AddNodesTail(const T* data, unsigned int count) {
 
 template<typename T>
 void LinkedList<T>::InsertAfter(Node* node, const T& data) {
-	/*Node* newNode = new Node(data);
-	if (node->next == nullptr) {
-		node->next = newNode;
-	}
-	else {
-		Node* nextNode = node->next;
-		node->next = newNode;
-		newNode->prev = node;
-
-		newNode->next = nextNode;
-		if (nextNode != nullptr) {
-			nextNode->prev = newNode;
-		}
-	}
-	listSize++;*/
-	Node* newNode = new Node(data);
 	if (node->next != nullptr) {
+		Node* newNode = new Node(data);
 		Node* nextNode = node->next;
 
 		//connect node to newNode
@@ -318,33 +306,18 @@ void LinkedList<T>::InsertAfter(Node* node, const T& data) {
 
 template<typename T>
 void LinkedList<T>::InsertBefore(Node* node, const T& data) {
-	/*Node* newNode = new Node(data);
-	if (node->prev == nullptr) {
-		node->prev = newNode;
-		newNode->next = node;
-	}
-	else {
-		Node* prevNode = node->prev;
-		node->prev = newNode;
-		newNode->next = node;
-
-		newNode->prev = prevNode;
-		if (prevNode != nullptr) {
-			prevNode->next = newNode;
-		}
-	}
-	listSize++;*/
-	Node* newNode = new Node(data);
 	if (node->prev != nullptr) {
+		Node* newNode = new Node(data);
+
 		Node* prevNode = node->prev;
 		
 		//connect prevNode to newNode
-		prevNode->next = node;
-		node->prev = prevNode;
+		prevNode->next = newNode;
+		newNode->prev = prevNode;
 
 		//connect newNode to node
 		newNode->next = node;
-		node->prev = node;
+		node->prev = newNode;
 
 		listSize++;
 	}
@@ -357,18 +330,13 @@ void LinkedList<T>::InsertBefore(Node* node, const T& data) {
 
 template<typename T>
 void LinkedList<T>::InsertAt(const T& data, unsigned int index) {
-	//This will actually insert it at index - 1.
-	//if (index > listSize) {
-	//	throw -1;
-	//}
-	//if (index == listSize) {
-	//	InsertAfter(GetNode(listSize - 1), data);
-	//}
-	//
-	//InsertBefore(GetNode(index), data); //trash
-
-	//Insert before index?
-	InsertBefore(GetNode(index), data);
+	if (index < listSize) {
+		InsertBefore(GetNode(index), data);
+	}
+	else {
+		//In case it's at the end
+		AddTail(data);
+	}
 }
 
 template<typename T>
@@ -385,7 +353,7 @@ typename LinkedList<T>::Node* LinkedList<T>::GetNode(unsigned int index) {
 		return node;
 	}
 	//The index is out of bounds.
-	throw -1;
+	return nullptr;
 }
 
 template<typename T>
