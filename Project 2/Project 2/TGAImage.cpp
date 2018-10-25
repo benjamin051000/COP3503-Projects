@@ -1,37 +1,93 @@
 #include "TGAImage.h"
 
-TGAImage::TGAImage(const char* a) {
-	ifstream file(a, ios_base::binary | ios_base::ate);
+TGAImage::TGAImage(const char* filename) {
+	ifstream file(filename, ios_base::binary | ios_base::ate);
 	if (!file.is_open()) {
 		throw "Error opening file.";
 	}
 
-	/*---Load Header---*/
-
 	//	Get total bytes with tellg
-	auto totalBytes = file.tellg();
+	auto totalBytes = file.tellg(); //useful? idk
 	//	Seek to beginning of file
 	file.seekg(0);
 
-
-
-	short w, h;
-	file.read((char*)&w, sizeof(w));
-	file.read((char*)&h, sizeof(h));
-
-	header = TGAHeader(w, h);
+	/*---Load Header---*/
+	header = TGAHeader(file);
 
 	//Load the actual pixels
-	pixelData = new Pixel[header.width * header.height];
+	numPixels = header.width * header.height;
+	pixelData = new Pixel[numPixels];
+	for (unsigned int i = 0; i < numPixels; i++) {
+		char b, g, r;
+		file.read(&b, sizeof(b));
+		file.read(&g, sizeof(g));
+		file.read(&r, sizeof(r));
+		pixelData[i] = Pixel(b, g, r);
+	}
 }
 
-TGAImage::TGAHeader::TGAHeader(char a, char b, char c, short d, short e, char f, short g, short h, short i, short j, char k, char l) {
+bool TGAImage::writeFile(const char* name) {
+	ofstream newFile(name, ios_base::binary);
+
+	if (!newFile.is_open()) {
+		return false;
+	}
+
+	/*---Write Header---*/
+	header.writeHeader(newFile);
+
+	for (unsigned int i = 0; i < numPixels; i++) {
+		newFile.write((char*)&pixelData[i].b, sizeof(pixelData[i].b));
+		newFile.write((char*)&pixelData[i].g, sizeof(pixelData[i].g));
+		newFile.write((char*)&pixelData[i].r, sizeof(pixelData[i].r));
+
+	}
+	return true;
 }
 
-TGAImage::TGAHeader::TGAHeader(short w, short h) {
-	width = w;
-	height = h;
+TGAImage::TGAHeader::TGAHeader(ifstream& file) {
+
+	file.read(&idLength, sizeof(idLength));
+	
+	file.read(&colorMapType, sizeof(colorMapType));
+	
+	file.read(&dataTypeCode, sizeof(dataTypeCode));
+
+	file.read((char*)&colorMapOrigin, sizeof(colorMapOrigin));
+
+	file.read((char*)&colorMapLength, sizeof(colorMapLength));
+
+	file.read(&colorMapDepth, sizeof(colorMapDepth));
+
+	file.read((char*)&xOrigin, sizeof(xOrigin));
+	file.read((char*)&yOrigin, sizeof(yOrigin));
+
+	file.read((char*)&width, sizeof(width));
+	file.read((char*)&height, sizeof(height));
+
+	file.read(&bitsPerPixel, sizeof(bitsPerPixel));
+
+	file.read(&imageDescriptor, sizeof(imageDescriptor));
 }
 
-TGAImage::TGAHeader::TGAHeader() {
+void TGAImage::TGAHeader::writeHeader(ofstream& file) {
+	file.write(&idLength, sizeof(idLength));
+
+	file.write(&colorMapType, sizeof(colorMapType));
+
+	file.write((char*)&colorMapOrigin, sizeof(colorMapOrigin));
+
+	file.write((char*)&colorMapLength, sizeof(colorMapLength));
+
+	file.write(&colorMapDepth, sizeof(colorMapDepth));
+
+	file.write((char*)&xOrigin, sizeof(xOrigin));
+	file.write((char*)&yOrigin, sizeof(yOrigin));
+
+	file.write((char*)&width, sizeof(width));
+	file.write((char*)&height, sizeof(height));
+
+	file.write(&bitsPerPixel, sizeof(bitsPerPixel));
+
+	file.write(&imageDescriptor, sizeof(imageDescriptor));
 }

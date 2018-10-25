@@ -19,15 +19,19 @@ struct TGAImage {
 		char bitsPerPixel;
 		char imageDescriptor;
 
-		TGAHeader(char, char, char, short, short, char, short, short, short, short, char, char);
-		TGAHeader(short x, short y);
-		TGAHeader();
+		TGAHeader(ifstream& file);
+		TGAHeader() {}
+
+		void writeHeader(ofstream& file);
 	};
 
 	TGAHeader header;
+	unsigned int numPixels;
 	Pixel* pixelData;
 
 	//Constructor: Takes a filename, loads the data
-	TGAImage(const char* a);
+	TGAImage(const char* file);
+
+	bool writeFile(const char* name);
 };
 
