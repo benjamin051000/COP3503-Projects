@@ -10,8 +10,11 @@ TGAImage::TGAImage(const char* a) {
 
 	//	Get total bytes with tellg
 	auto totalBytes = file.tellg();
-	//	Seek to 12 bytes from the beginning of file, where xOrigin begins
-	file.seekg(12, ios_base::beg);
+	//	Seek to beginning of file
+	file.seekg(0);
+
+
+
 	short w, h;
 	file.read((char*)&w, sizeof(w));
 	file.read((char*)&h, sizeof(h));
@@ -20,6 +23,9 @@ TGAImage::TGAImage(const char* a) {
 
 	//Load the actual pixels
 	pixelData = new Pixel[header.width * header.height];
+}
+
+TGAImage::TGAHeader::TGAHeader(char a, char b, char c, short d, short e, char f, short g, short h, short i, short j, char k, char l) {
 }
 
 TGAImage::TGAHeader::TGAHeader(short w, short h) {
