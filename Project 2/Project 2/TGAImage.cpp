@@ -29,6 +29,10 @@ TGAImage::TGAImage(const char* filename) {
 	}
 }
 
+TGAImage::~TGAImage() {
+	delete[] pixelData;
+}
+
 bool TGAImage::writeFile(const char* name) {
 	ofstream newFile(name, ios_base::binary);
 

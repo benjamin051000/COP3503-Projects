@@ -39,6 +39,7 @@ struct TGAImage {
 
 	//Constructor: Takes a filename, loads the data
 	TGAImage(const char* file);
+	~TGAImage();
 
 	bool writeFile(const char* name);
 };
