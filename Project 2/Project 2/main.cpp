@@ -2,8 +2,6 @@
 #include "TGAImage.h"
 using namespace std;
 
-TGAImage multiply(TGAImage& image1, TGAImage& image2);
-
 int main(int argc, char** argv) {
 	/*Make: https://ufl.instructure.com/courses/357209/pages/makefiles */
 
@@ -22,8 +20,4 @@ int main(int argc, char** argv) {
 	}
 
 	return 0;
-}
-
-TGAImage multiply(TGAImage& image1, TGAImage& image2) {
-
 }

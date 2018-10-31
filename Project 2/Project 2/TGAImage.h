@@ -42,5 +42,8 @@ struct TGAImage {
 	~TGAImage();
 
 	bool writeFile(const char* name);
+
+	/*Image Manipulation*/
+	TGAImage multiply(TGAImage& a);
 };
 

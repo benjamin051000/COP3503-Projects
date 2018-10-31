@@ -52,6 +52,10 @@ bool TGAImage::writeFile(const char* name) {
 	return true;
 }
 
+TGAImage TGAImage::multiply(TGAImage & a) {
+	return NULL;
+}
+
 TGAImage::TGAHeader::TGAHeader(ifstream& file) {
 
 	file.read(&idLength, sizeof(idLength));
