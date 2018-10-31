@@ -7,17 +7,24 @@ int main(int argc, char** argv) {
 
 	//TGAImage image(argv[1]);
 
-	TGAImage image("input\\layer1.tga");
-	cout << "Created image." << endl;
-	image.header.printHeader();
-	cout << image.pixelData[image.numPixels - 1].r << endl;
+	TGAImage image("input\\layer1.tga"), image2("input\\pattern1.tga");
+	cout << "Created images." << endl;
+	//image.header.printHeader();
+	
+	//cout << image.pixelData[image.numPixels - 1].r << endl;
 
-	if (image.writeFile("copy.tga")) {
-		cout << "\nCopied into folder." << endl;
+	
+
+	//Task 1
+	TGAImage output = image.multiply(image2);
+
+	if (output.writeFile("part1.tga")) {
+		cout << "\nCopied into output." << endl;
 	}
 	else {
 		cout << "An error occurred when copying the file." << endl;
 	}
+
 
 	return 0;
 }

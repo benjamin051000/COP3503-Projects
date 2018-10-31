@@ -1,5 +1,29 @@
 #include "TGAImage.h"
 
+TGAImage::TGAImage(short width, short height) {
+	header = TGAHeader();
+	header.width = width;
+	header.height = height;
+
+	numPixels = header.width * header.height;
+	pixelData = new Pixel[numPixels];
+}
+
+TGAImage::TGAImage() {
+	header = TGAHeader();
+
+}
+
+TGAImage::TGAImage(const TGAImage & a) {
+	header = a.header;
+	numPixels = a.numPixels;
+	pixelData = new Pixel[numPixels];
+
+	for (unsigned int i = 0; i < numPixels; i++) {
+		pixelData[i] = Pixel(a.pixelData[i].r, a.pixelData[i].g, a.pixelData[i].b);//a.pixelData[i];
+	}
+}
+
 TGAImage::TGAImage(const char* filename) {
 	ifstream file(filename, ios_base::binary | ios_base::ate);
 	if (!file.is_open()) {
@@ -53,6 +77,37 @@ bool TGAImage::writeFile(const char* name) {
 }
 
 TGAImage TGAImage::multiply(TGAImage & a) {
+	TGAImage output(header.width, header.height);
+	output.header = TGAHeader(header); //Should this be copied? 
+	
+	for (unsigned int i = 0; i < this->numPixels; i++) {
+		double norm1r = (int)(pixelData[i].r) / 255,
+			   norm1g = (int)(pixelData[i].g) / 255,
+			   norm1b = (int)(pixelData[i].b) / 255;
+		double norm2r = (int)(a.pixelData[i].r) / 255,
+			   norm2g = (int)(a.pixelData[i].g) / 255,
+			   norm2b = (int)(a.pixelData[i].b) / 255;
+
+		int multR = norm1r * norm2r * 255, //Is this correct? idk man
+			multG = norm1g * norm2g * 255,
+			multB = norm1b * norm2b * 255;
+
+		output.pixelData[i].r = multR; //Cast to unsigned char?
+		output.pixelData[i].g = multG;
+		output.pixelData[i].b = multB;
+	}
+	return output;
+}
+
+TGAImage TGAImage::subtract(TGAImage & a) {
+	return NULL;
+}
+
+TGAImage TGAImage::screen(TGAImage & a) {
+	return NULL;
+}
+
+TGAImage TGAImage::overlay(TGAImage & a) {
 	return NULL;
 }
 
@@ -79,6 +134,26 @@ TGAImage::TGAHeader::TGAHeader(ifstream& file) {
 	file.read(&bitsPerPixel, sizeof(bitsPerPixel));
 
 	file.read(&imageDescriptor, sizeof(imageDescriptor));
+}
+
+TGAImage::TGAHeader::TGAHeader(TGAHeader& a) {
+	idLength = a.idLength;
+
+	colorMapType = a.colorMapType;
+	dataTypeCode = a.dataTypeCode;
+
+	colorMapOrigin = a.colorMapOrigin;
+	colorMapLength = a.colorMapLength;
+	colorMapDepth = a.colorMapDepth;
+
+	xOrigin = a.xOrigin;
+	yOrigin = a.yOrigin;
+
+	width = a.width;
+	height = a.height;
+
+	bitsPerPixel = a.bitsPerPixel;
+	imageDescriptor = a.imageDescriptor;
 }
 
 void TGAImage::TGAHeader::writeHeader(ofstream& file) {

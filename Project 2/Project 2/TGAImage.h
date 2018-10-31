@@ -25,6 +25,7 @@ struct TGAImage {
 		char imageDescriptor;
 
 		TGAHeader(ifstream& file);
+		TGAHeader(TGAHeader& a); //Necessary?
 		TGAHeader() {}
 
 		void writeHeader(ofstream& file);
@@ -38,6 +39,9 @@ struct TGAImage {
 	Pixel* pixelData;
 
 	//Constructor: Takes a filename, loads the data
+	TGAImage(short width, short height);
+	TGAImage();
+	TGAImage(const TGAImage& a);
 	TGAImage(const char* file);
 	~TGAImage();
 
@@ -45,5 +49,8 @@ struct TGAImage {
 
 	/*Image Manipulation*/
 	TGAImage multiply(TGAImage& a);
+	TGAImage subtract(TGAImage& a);
+	TGAImage screen(TGAImage& a);
+	TGAImage overlay(TGAImage& a);
 };
 
