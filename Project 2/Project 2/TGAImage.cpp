@@ -76,19 +76,19 @@ bool TGAImage::writeFile(const char* name) {
 	return true;
 }
 
-TGAImage TGAImage::multiply(TGAImage & a) {
+TGAImage TGAImage::multiply(TGAImage & a) {//Outputs a layer backwards ??
 	TGAImage output(header.width, header.height);
 	output.header = TGAHeader(header); //Should this be copied? 
 	
-	for (unsigned int i = 0; i < this->numPixels; i++) {
-		double norm1r = (int)(pixelData[i].r) / 255,
-			   norm1g = (int)(pixelData[i].g) / 255,
-			   norm1b = (int)(pixelData[i].b) / 255;
-		double norm2r = (int)(a.pixelData[i].r) / 255,
-			   norm2g = (int)(a.pixelData[i].g) / 255,
-			   norm2b = (int)(a.pixelData[i].b) / 255;
+	for (unsigned int i = 0; i < output.numPixels; i++) {
+		double norm1r = (double)(pixelData[i].r) / 255,
+			   norm1g = (double)(pixelData[i].g) / 255,
+			   norm1b = (double)(pixelData[i].b) / 255;
+		double norm2r = (double)(a.pixelData[i].r) / 255,
+			   norm2g = (double)(a.pixelData[i].g) / 255,
+			   norm2b = (double)(a.pixelData[i].b) / 255;
 
-		int multR = norm1r * norm2r * 255, //Is this correct? idk man
+		unsigned char multR = norm1r * norm2r * 255, //Is this correct? idk man
 			multG = norm1g * norm2g * 255,
 			multB = norm1b * norm2b * 255;
 
@@ -97,10 +97,36 @@ TGAImage TGAImage::multiply(TGAImage & a) {
 		output.pixelData[i].b = multB;
 	}
 	return output;
-}
+} 
 
 TGAImage TGAImage::subtract(TGAImage & a) {
-	return NULL;
+	TGAImage output(header.width, header.height);
+	output.header = TGAHeader(header); //Should this be copied? 
+
+	for (unsigned int i = 0; i < output.numPixels; i++) {
+		int topR = (int)pixelData[i].r,
+			bottomR = (int)a.pixelData[i].r;
+		int outputR = topR - bottomR;
+		if (outputR < 0)
+			outputR = 0;
+		
+		int topG = (int)pixelData[i].g,
+			bottomG = (int)a.pixelData[i].g;
+		int outputG = topG - bottomG;
+		if (outputG < 0)
+			outputG = 0;
+
+		int topB = (int)pixelData[i].b,
+			bottomB = (int)a.pixelData[i].b;
+		int outputB = topB - bottomB;
+		if (outputB < 0)
+			outputB = 0;
+
+		output.pixelData[i].r = outputR;
+		output.pixelData[i].b = outputB;
+		output.pixelData[i].g = outputG;
+	}
+	return output;
 }
 
 TGAImage TGAImage::screen(TGAImage & a) {

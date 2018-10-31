@@ -7,9 +7,9 @@ int main(int argc, char** argv) {
 
 	//TGAImage image(argv[1]);
 
-	TGAImage image("input\\layer1.tga"), image2("input\\pattern1.tga");
+	TGAImage image("input\\layer2.tga"), image2("input\\car.tga");
 	cout << "Created images." << endl;
-	//image.header.printHeader();
+	/*image.header.printHeader();*/
 	
 	//cout << image.pixelData[image.numPixels - 1].r << endl;
 
@@ -18,7 +18,7 @@ int main(int argc, char** argv) {
 	//Task 1
 	TGAImage output = image.multiply(image2);
 
-	if (output.writeFile("part1.tga")) {
+	if (output.writeFile("part2.tga")) {
 		cout << "\nCopied into output." << endl;
 	}
 	else {
