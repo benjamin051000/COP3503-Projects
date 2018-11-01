@@ -3,28 +3,23 @@
 using namespace std;
 
 int main(int argc, char** argv) {
-	/*Make: https://ufl.instructure.com/courses/357209/pages/makefiles */
-
-	//TGAImage image(argv[1]);
-
-	TGAImage image("input\\layer2.tga"), image2("input\\car.tga");
-	cout << "Created images." << endl;
-	/*image.header.printHeader();*/
 	
-	//cout << image.pixelData[image.numPixels - 1].r << endl;
-
+	TGAImage image("input\\layer1.tga"), image2("input\\pattern1.tga");
+	TGAImage correctMult("examples\\EXAMPLE_part1.tga");
+	cout << "Loaded files successfully." << endl;
 	
-
 	//Task 1
 	TGAImage output = image.multiply(image2);
 
-	if (output.writeFile("part2.tga")) {
-		cout << "\nCopied into output." << endl;
+	cout << "Total mismatched pixels: " << output.compareTo(correctMult) << endl; //" out of " << image.numPixels << endl;
+	
+	if (output.writeFile("task1.tga")) {
+		cout << "File written successfully." << endl;
 	}
-	else {
-		cout << "An error occurred when copying the file." << endl;
-	}
-
 
 	return 0;
 }
+
+
+
+/*Make: https://ufl.instructure.com/courses/357209/pages/makefiles */

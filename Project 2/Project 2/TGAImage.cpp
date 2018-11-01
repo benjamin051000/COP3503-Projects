@@ -1,17 +1,13 @@
 #include "TGAImage.h"
 
-TGAImage::TGAImage(short width, short height) {
-	header = TGAHeader();
-	header.width = width;
-	header.height = height;
-
-	numPixels = header.width * header.height;
-	pixelData = new Pixel[numPixels];
-}
-
 TGAImage::TGAImage() {
 	header = TGAHeader();
+}
 
+TGAImage::TGAImage(const TGAHeader& header) {
+	this->header = TGAHeader(header);
+	numPixels = header.width * header.height;
+	pixelData = new Pixel[numPixels];
 }
 
 TGAImage::TGAImage(const TGAImage & a) {
@@ -20,7 +16,7 @@ TGAImage::TGAImage(const TGAImage & a) {
 	pixelData = new Pixel[numPixels];
 
 	for (unsigned int i = 0; i < numPixels; i++) {
-		pixelData[i] = Pixel(a.pixelData[i].r, a.pixelData[i].g, a.pixelData[i].b);//a.pixelData[i];
+		pixelData[i] = Pixel(a.pixelData[i].b, a.pixelData[i].g, a.pixelData[i].r);//a.pixelData[i];
 	}
 }
 
@@ -44,10 +40,10 @@ TGAImage::TGAImage(const char* filename) {
 	numPixels = header.width * header.height;
 	pixelData = new Pixel[numPixels];
 	for (unsigned int i = 0; i < numPixels; i++) {
-		char b, g, r;
-		file.read(&b, sizeof(b));
-		file.read(&g, sizeof(g));
-		file.read(&r, sizeof(r));
+		unsigned char b, g, r;
+		file.read((char*)&b, sizeof(b));
+		file.read((char*)&g, sizeof(g));
+		file.read((char*)&r, sizeof(r));
 		pixelData[i] = Pixel(b, g, r);
 		//cout << "Pixel " << i << " {" << (int)r << ", " << (int)g << ", " << (int)b << "}" << endl;
 	}
@@ -76,34 +72,36 @@ bool TGAImage::writeFile(const char* name) {
 	return true;
 }
 
-TGAImage TGAImage::multiply(TGAImage & a) {//Outputs a layer backwards ??
-	TGAImage output(header.width, header.height);
-	output.header = TGAHeader(header); //Should this be copied? 
-	
+TGAImage TGAImage::multiply(const TGAImage& a) const {
+	TGAImage output(a.header);
+	//output.pixelData = new Pixel[output.numPixels];
+
 	for (unsigned int i = 0; i < output.numPixels; i++) {
-		double norm1r = (double)(pixelData[i].r) / 255,
-			   norm1g = (double)(pixelData[i].g) / 255,
-			   norm1b = (double)(pixelData[i].b) / 255;
-		double norm2r = (double)(a.pixelData[i].r) / 255,
-			   norm2g = (double)(a.pixelData[i].g) / 255,
-			   norm2b = (double)(a.pixelData[i].b) / 255;
+		float norm1b = pixelData[i].b / 255.f,
+			   norm1g = pixelData[i].g / 255.f,
+			   norm1r = pixelData[i].r / 255.f;
 
-		unsigned char multR = norm1r * norm2r * 255, //Is this correct? idk man
-			multG = norm1g * norm2g * 255,
-			multB = norm1b * norm2b * 255;
+		float norm2b = a.pixelData[i].b / 255.f,
+			   norm2g = a.pixelData[i].g / 255.f,
+			   norm2r = a.pixelData[i].r / 255.f;
 
-		output.pixelData[i].r = multR; //Cast to unsigned char?
+		unsigned char multB = (norm1b * norm2b * 255.f) + 0.5f,
+					multG = (norm1g * norm2g * 255.f) + 0.5f,
+					multR = (norm1r * norm2r * 255.f) + 0.5f;
+
+		output.pixelData[i].b = multB; //These are being switched somewhere...
 		output.pixelData[i].g = multG;
-		output.pixelData[i].b = multB;
+		output.pixelData[i].r = multR;
 	}
+
 	return output;
 } 
 
 TGAImage TGAImage::subtract(TGAImage & a) {
-	TGAImage output(header.width, header.height);
-	output.header = TGAHeader(header); //Should this be copied? 
+	TGAImage output(a.header);
 
 	for (unsigned int i = 0; i < output.numPixels; i++) {
+
 		int topR = (int)pixelData[i].r,
 			bottomR = (int)a.pixelData[i].r;
 		int outputR = topR - bottomR;
@@ -123,9 +121,10 @@ TGAImage TGAImage::subtract(TGAImage & a) {
 			outputB = 0;
 
 		output.pixelData[i].r = outputR;
-		output.pixelData[i].b = outputB;
 		output.pixelData[i].g = outputG;
+		output.pixelData[i].b = outputB;
 	}
+
 	return output;
 }
 
@@ -135,6 +134,21 @@ TGAImage TGAImage::screen(TGAImage & a) {
 
 TGAImage TGAImage::overlay(TGAImage & a) {
 	return NULL;
+}
+
+unsigned int TGAImage::compareTo(TGAImage& correct) {
+	unsigned int failCount = 0;
+	for (unsigned int i = 0; i < numPixels; i++) {
+		bool rMatch = this->pixelData[i].r == correct.pixelData[i].r;
+		//cout << (int)pixelData[i].r << '\t' << (int)correct.pixelData[i].r << endl;;
+		bool gMatch = this->pixelData[i].g == correct.pixelData[i].g;
+		bool bMatch = this->pixelData[i].b == correct.pixelData[i].b;
+
+		if (!rMatch || !gMatch || !bMatch) {
+			failCount++;
+		}
+	}
+	return failCount;
 }
 
 TGAImage::TGAHeader::TGAHeader(ifstream& file) {
@@ -162,7 +176,7 @@ TGAImage::TGAHeader::TGAHeader(ifstream& file) {
 	file.read(&imageDescriptor, sizeof(imageDescriptor));
 }
 
-TGAImage::TGAHeader::TGAHeader(TGAHeader& a) {
+TGAImage::TGAHeader::TGAHeader(const TGAHeader& a) {
 	idLength = a.idLength;
 
 	colorMapType = a.colorMapType;
