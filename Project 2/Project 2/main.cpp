@@ -3,7 +3,8 @@
 using namespace std;
 
 int main(int argc, char** argv) {
-	/*Make: https://ufl.instructure.com/courses/357209/pages/makefiles */
+	/*Make: https://ufl.instructure.com/courses/357209/pages/makefiles 
+	Functions: http://www.simplefilter.de/en/basics/mixmods.html */
 
 	//TGAImage image(argv[1]);
 
