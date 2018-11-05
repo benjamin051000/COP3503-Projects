@@ -10,7 +10,7 @@ TGAImage::TGAImage(const TGAHeader& header) {
 	pixelData = new Pixel[numPixels];
 }
 
-TGAImage::TGAImage(const TGAImage & a) {
+TGAImage::TGAImage(const TGAImage& a) {
 	header = a.header;
 	numPixels = a.numPixels;
 	pixelData = new Pixel[numPixels];
@@ -74,7 +74,6 @@ bool TGAImage::writeFile(const char* name) {
 
 TGAImage TGAImage::multiply(const TGAImage& a) const {
 	TGAImage output(a.header);
-	//output.pixelData = new Pixel[output.numPixels];
 
 	for (unsigned int i = 0; i < output.numPixels; i++) {
 		float norm1b = pixelData[i].b / 255.f,
@@ -89,7 +88,7 @@ TGAImage TGAImage::multiply(const TGAImage& a) const {
 					multG = (norm1g * norm2g * 255.f) + 0.5f,
 					multR = (norm1r * norm2r * 255.f) + 0.5f;
 
-		output.pixelData[i].b = multB; //These are being switched somewhere...
+		output.pixelData[i].b = multB;
 		output.pixelData[i].g = multG;
 		output.pixelData[i].r = multR;
 	}
@@ -102,20 +101,20 @@ TGAImage TGAImage::subtract(TGAImage & a) {
 
 	for (unsigned int i = 0; i < output.numPixels; i++) {
 
-		int topR = (int)pixelData[i].r,
-			bottomR = (int)a.pixelData[i].r;
+		int topR = (int)a.pixelData[i].r,
+			bottomR = (int)pixelData[i].r;
 		int outputR = topR - bottomR;
 		if (outputR < 0)
 			outputR = 0;
 		
-		int topG = (int)pixelData[i].g,
-			bottomG = (int)a.pixelData[i].g;
+		int topG = (int)a.pixelData[i].g,
+			bottomG = (int)pixelData[i].g;
 		int outputG = topG - bottomG;
 		if (outputG < 0)
 			outputG = 0;
 
-		int topB = (int)pixelData[i].b,
-			bottomB = (int)a.pixelData[i].b;
+		int topB = (int)a.pixelData[i].b,
+			bottomB = (int)pixelData[i].b;
 		int outputB = topB - bottomB;
 		if (outputB < 0)
 			outputB = 0;
@@ -129,7 +128,28 @@ TGAImage TGAImage::subtract(TGAImage & a) {
 }
 
 TGAImage TGAImage::screen(TGAImage & a) {
-	return NULL;
+	// 1-(1-A)*(1-B)
+	TGAImage output(a.header);
+
+	for (unsigned int i = 0; i < output.numPixels; i++) {
+		float norm1b = pixelData[i].b / 255.f,
+			norm1g = pixelData[i].g / 255.f,
+			norm1r = pixelData[i].r / 255.f;
+
+		float norm2b = a.pixelData[i].b / 255.f,
+			norm2g = a.pixelData[i].g / 255.f,
+			norm2r = a.pixelData[i].r / 255.f;
+
+		unsigned char multB = (1 - (1 - norm1b) * (1 -norm2b)) * 255.f + 0.5f,
+			multG = (1 - (1 - norm1g) * (1 - norm2g)) * 255.f + 0.5f,
+			multR = (1 - (1 - norm1r) * (1 - norm2r)) * 255.f + 0.5f;
+
+		output.pixelData[i].b = multB;
+		output.pixelData[i].g = multG;
+		output.pixelData[i].r = multR;
+	}
+
+	return output;
 }
 
 TGAImage TGAImage::overlay(TGAImage & a) {
