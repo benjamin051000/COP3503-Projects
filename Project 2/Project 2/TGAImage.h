@@ -50,9 +50,9 @@ struct TGAImage {
 
 	/*Image Manipulation*/
 	TGAImage multiply(const TGAImage& a) const;
-	TGAImage subtract(TGAImage& a);
-	TGAImage screen(TGAImage& a);
-	TGAImage overlay(TGAImage& a);
+	TGAImage subtract(const TGAImage& a) const;
+	TGAImage screen(const TGAImage& a) const;
+	TGAImage overlay(const TGAImage& a) const;
 
 	/*Compare*/
 	unsigned int compareTo(TGAImage& correct);

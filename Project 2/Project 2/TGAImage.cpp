@@ -96,7 +96,7 @@ TGAImage TGAImage::multiply(const TGAImage& a) const {
 	return output;
 } 
 
-TGAImage TGAImage::subtract(TGAImage & a) {
+TGAImage TGAImage::subtract(const TGAImage & a) const {
 	TGAImage output(a.header);
 
 	for (unsigned int i = 0; i < output.numPixels; i++) {
@@ -127,7 +127,7 @@ TGAImage TGAImage::subtract(TGAImage & a) {
 	return output;
 }
 
-TGAImage TGAImage::screen(TGAImage & a) {
+TGAImage TGAImage::screen(const TGAImage & a) const {
 	// 1-(1-A)*(1-B)
 	TGAImage output(a.header);
 
@@ -152,7 +152,7 @@ TGAImage TGAImage::screen(TGAImage & a) {
 	return output;
 }
 
-TGAImage TGAImage::overlay(TGAImage & a) {
+TGAImage TGAImage::overlay(const TGAImage & a) const {
 	return NULL;
 }
 
