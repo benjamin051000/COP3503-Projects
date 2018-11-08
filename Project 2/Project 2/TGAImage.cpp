@@ -148,35 +148,38 @@ void TGAImage::overlay(TGAImage& bottom) {
 			norm1r = bottom.pixelData[i].r / 255.f;
 
 		float norm2b = pixelData[i].b / 255.f,
-			norm2g = pixelData[i].g / 255.5f,
+			norm2g = pixelData[i].g / 255.f,
 			norm2r = pixelData[i].r / 255.f;
 
-		unsigned char newR, newG, newB;
+		float newR, newG, newB;
 
 		//Blue channel
 		if (norm1b <= 0.5f)
-			newB = (unsigned char)(2 * norm1b * norm2b * 255.f + 0.5f);
+			newB = 2 * norm1b * norm2b * 255.f + 0.5f;
 		else
-			newB = (unsigned char)(1 - (2 * (1 - norm1b) * (1 - norm2b) * 255.f) + 0.5f);
+			newB = ( 1 - (2 * (1 - norm1b) * (1 - norm2b)) ) * 255.f + 0.5f;
 		
-		pixelData[i].b = newB > 255 ? 255 : newB;
-
+		pixelData[i].b = newB > 255 ? 255 : (unsigned char)newB;
+		
 		//Green channel
 		if (norm1g <= 0.5f)
-			newG = (unsigned char)(2 * norm1g * norm2g * 255.f + 0.5f);
+			newG = 2 * norm1g * norm2g * 255.f + 0.5f;
 		else
-			newG = (unsigned char)(1 - (2 * (1 - norm1g) * (1 - norm2g) * 255.f) + 0.5f);
+			newG = ( 1 - (2 * (1 - norm1g) * (1 - norm2g)) ) * 255.f + 0.5f;
 
-		pixelData[i].g = newG > 255 ? 255 : newG;
+		pixelData[i].g = newG > 255 ? 255 : (unsigned char)newG;
 
 		//Red channel
 		if (norm1r <= 0.5f)
-			newR = (unsigned char)(2 * norm1r * norm2r * 255.f + 0.5f);
+			newR = 2 * norm1r * norm2r * 255.f + 0.5f;
 		else
-			newR = (unsigned char)(1 - (2 * (1 - norm1r) * (1 - norm2r) * 255.f) + 0.5f);
+			newR = ( 1 - (2 * (1 - norm1r) * (1 - norm2r)) ) * 255.f + 0.5f;
 
-		pixelData[i].r = newR > 255 ? 255 : newR;
+		pixelData[i].r = newR > 255 ? 255 : (unsigned char)newR;
 		
+		if (i % 500 == 0)
+			cout << (int)pixelData[i].r << '\t' << (int)pixelData[i].g 
+			<< '\t' << (int)pixelData[i].b << endl;
 	}
 }
 
@@ -216,11 +219,43 @@ void TGAImage::flip() {
 	}
 }
 
+TGAImage TGAImage::getRedChannel() {
+	TGAImage output(*this);
+	
+	for (unsigned int i = 0; i < numPixels; i++) {
+		output.pixelData[i].g = pixelData[i].r;
+		output.pixelData[i].b = pixelData[i].r;
+	}
+
+	return output;
+}
+
+TGAImage TGAImage::getBlueChannel() {
+	TGAImage output(*this);
+
+	for (unsigned int i = 0; i < numPixels; i++) {
+		output.pixelData[i].r = pixelData[i].b;
+		output.pixelData[i].g = pixelData[i].b;
+	}
+
+	return output;
+}
+
+TGAImage TGAImage::getGreenChannel() {
+	TGAImage output(*this);
+
+	for (unsigned int i = 0; i < numPixels; i++) {
+		output.pixelData[i].r = pixelData[i].g;
+		output.pixelData[i].b = pixelData[i].g;
+	}
+
+	return output;
+}
+
 unsigned int TGAImage::compareTo(TGAImage& correct) {
 	unsigned int failCount = 0;
 	for (unsigned int i = 0; i < numPixels; i++) {
 		bool rMatch = this->pixelData[i].r == correct.pixelData[i].r;
-		//cout << (int)pixelData[i].r << '\t' << (int)correct.pixelData[i].r << endl;;
 		bool gMatch = this->pixelData[i].g == correct.pixelData[i].g;
 		bool bMatch = this->pixelData[i].b == correct.pixelData[i].b;
 

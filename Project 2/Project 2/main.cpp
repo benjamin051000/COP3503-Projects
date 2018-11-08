@@ -13,7 +13,7 @@ void task8();
 void task9();
 void task10();
 
-int main(int argc, char** argv) {
+int main() {
 	/*
 	Task 1: Complete
 	Task 2: Complete
@@ -22,21 +22,21 @@ int main(int argc, char** argv) {
 	Task 5: ---Error!!!
 	Task 6: Complete
 	Task 7: Complete
-	Task 8: 
+	Task 8: Complete
 	Task 9: 
 	Task 10: Complete
 	*/
 
-	task1();
+	/*task1();
 	task2();
 	task3();
-	task4();
+	task4();*/
 	task5();
-	task6();
+	/*task6();
 	task7();
-	task8();
+	task8();*/
 	task9();
-	task10();
+	//task10();
 	
 	return 0;
 }
@@ -160,8 +160,35 @@ void task8() {
 		correctR("examples\\EXAMPLE_part8_r.tga"),
 		correctG("examples\\EXAMPLE_part8_g.tga"),
 		correctB("examples\\EXAMPLE_part8_b.tga");
+	
+	TGAImage red = a.getRedChannel(), 
+		green = a.getGreenChannel(),
+		blue = a.getBlueChannel();
 
+	red.writeFile("output\\part8_r.tga");
+	green.writeFile("output\\part8_g.tga");
+	blue.writeFile("output\\part8_b.tga");
 
+	if (red.compareTo(correctR) == 0) {
+		cout << "Task 8 (RED) complete." << endl;
+	}
+	else {
+		cout << "Task 8 (RED) has errors." << endl;
+	}
+
+	if (green.compareTo(correctG) == 0) {
+		cout << "Task 8 (GREEN) complete." << endl;
+	}
+	else {
+		cout << "Task 8 (GREEN) has errors." << endl;
+	}
+
+	if (blue.compareTo(correctB) == 0) {
+		cout << "Task 8 (BLUE) complete." << endl;
+	}
+	else {
+		cout << "Task 8 (BLUE) has errors." << endl;
+	}
 }
 
 void task9() {

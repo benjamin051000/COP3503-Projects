@@ -58,6 +58,11 @@ public:
 	void scale(float r = 1, float g = 1, float b = 1);
 	void flip();
 
+	/*Channels*/
+	TGAImage getRedChannel();
+	TGAImage getBlueChannel();
+	TGAImage getGreenChannel();
+
 	/*Compare*/
 	unsigned int compareTo(TGAImage& correct);
 };
