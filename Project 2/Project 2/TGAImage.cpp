@@ -53,6 +53,12 @@ TGAImage::~TGAImage() {
 	delete[] pixelData;
 }
 
+TGAImage::TGAImage(TGAImage & r, TGAImage & g, TGAImage & b) {
+	header = TGAHeader(r.header);
+
+
+}
+
 bool TGAImage::writeFile(const char* name) {
 	ofstream newFile(name, ios_base::binary);
 
@@ -155,25 +161,25 @@ void TGAImage::overlay(TGAImage& bottom) {
 
 		//Blue channel
 		if (norm1b <= 0.5f)
-			newB = 2 * norm1b * norm2b * 255.f + 0.5f;
+			newB = 2 * norm1b * norm2b * 255 + 0.5f;
 		else
-			newB = ( 1 - (2 * (1 - norm1b) * (1 - norm2b)) ) * 255.f + 0.5f;
+			newB = ( 1 - (2 * (1 - norm1b) * (1 - norm2b)) ) * 255 + 0.5f;
 		
 		pixelData[i].b = newB > 255 ? 255 : (unsigned char)newB;
 		
 		//Green channel
 		if (norm1g <= 0.5f)
-			newG = 2 * norm1g * norm2g * 255.f + 0.5f;
+			newG = 2 * norm1g * norm2g * 255 + 0.5f;
 		else
-			newG = ( 1 - (2 * (1 - norm1g) * (1 - norm2g)) ) * 255.f + 0.5f;
+			newG = ( 1 - (2 * (1 - norm1g) * (1 - norm2g)) ) * 255 + 0.5f;
 
 		pixelData[i].g = newG > 255 ? 255 : (unsigned char)newG;
 
 		//Red channel
 		if (norm1r <= 0.5f)
-			newR = 2 * norm1r * norm2r * 255.f + 0.5f;
+			newR = 2 * norm1r * norm2r * 255 + 0.5f;
 		else
-			newR = ( 1 - (2 * (1 - norm1r) * (1 - norm2r)) ) * 255.f + 0.5f;
+			newR = ( 1 - (2 * (1 - norm1r) * (1 - norm2r)) ) * 255 + 0.5f;
 
 		pixelData[i].r = newR > 255 ? 255 : (unsigned char)newR;
 		

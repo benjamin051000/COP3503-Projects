@@ -192,6 +192,11 @@ void task8() {
 }
 
 void task9() {
+	TGAImage red("input\\layer_red.tga"), green("input\\layer_green.tga"), blue("input\\layer_blue.tga"),
+		correct("examples\\EXAMPLE_part9.tga");
+
+	TGAImage combined(red, green, blue);
+
 }
 
 void task10() {
