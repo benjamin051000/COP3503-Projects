@@ -19,9 +19,9 @@ int main(int argc, char** argv) {
 	Task 2: Complete
 	Task 3: Complete
 	Task 4: Complete
-	Task 5: __Error!!!
+	Task 5: ---Error!!!
 	Task 6: Complete
-	Task 7: 
+	Task 7: Complete
 	Task 8: 
 	Task 9: 
 	Task 10: 
@@ -32,11 +32,11 @@ int main(int argc, char** argv) {
 	task3();
 	task4();*/
 	task5();
-	/*task6();
+	task6();
 	task7();
 	task8();
 	task9();
-	task10();*/
+	task10();
 	
 	return 0;
 }

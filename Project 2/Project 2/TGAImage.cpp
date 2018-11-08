@@ -84,9 +84,9 @@ void TGAImage::multiply(TGAImage& bottom) {
 			   norm2g = bottom.pixelData[i].g / 255.f,
 			   norm2r = bottom.pixelData[i].r / 255.f;
 
-		unsigned char multB = (norm1b * norm2b * 255.f) + 0.5f,
-					multG = (norm1g * norm2g * 255.f) + 0.5f,
-					multR = (norm1r * norm2r * 255.f) + 0.5f;
+		unsigned char multB = (unsigned char)((norm1b * norm2b * 255.f) + 0.5f),
+					multG = (unsigned char)((norm1g * norm2g * 255.f) + 0.5f),
+					multR = (unsigned char)((norm1r * norm2r * 255.f) + 0.5f);
 
 		pixelData[i].b = multB;
 		pixelData[i].g = multG;
@@ -136,9 +136,9 @@ void TGAImage::screen(TGAImage& bottom) {
 			norm2g = bottom.pixelData[i].g / 255.f,
 			norm2r = bottom.pixelData[i].r / 255.f;
 
-		unsigned char multB = (1 - (1 - norm1b) * (1 -norm2b)) * 255.f + 0.5f,
-			multG = (1 - (1 - norm1g) * (1 - norm2g)) * 255.f + 0.5f,
-			multR = (1 - (1 - norm1r) * (1 - norm2r)) * 255.f + 0.5f;
+		unsigned char multB = (unsigned char)((1 - (1 - norm1b) * (1 -norm2b)) * 255.f + 0.5f),
+			multG = (unsigned char)((1 - (1 - norm1g) * (1 - norm2g)) * 255.f + 0.5f),
+			multR = (unsigned char)((1 - (1 - norm1r) * (1 - norm2r)) * 255.f + 0.5f);
 
 		pixelData[i].b = multB;
 		pixelData[i].g = multG;
@@ -162,25 +162,25 @@ void TGAImage::overlay(TGAImage& bottom) {
 
 		//Blue channel
 		if (norm1b <= 0.5f)
-			newB = 2 * norm1b * norm2b * 255 + 0.5f;
+			newB = (unsigned char)(2 * norm1b * norm2b * 255 + 0.5f);
 		else
-			newB = 1 - (2 * (1 - norm1b) * (1 - norm2b) * 255.f) + 0.5f;
+			newB = (unsigned char)(1 - (2 * (1 - norm1b) * (1 - norm2b) * 255.f) + 0.5f);
 		
 		pixelData[i].b = newB > 255 ? 255 : newB;
 
 		//Green channel
 		if (norm1g <= 0.5f)
-			newG = 2 * norm1g * norm2g * 255 + 0.5f;
+			newG = (unsigned char)(2 * norm1g * norm2g * 255 + 0.5f);
 		else
-			newG = 1 - (2 * (1 - norm1g) * (1 - norm2g) * 255.f) + 0.5f;
+			newG = (unsigned char)(1 - (2 * (1 - norm1g) * (1 - norm2g) * 255.f) + 0.5f);
 
 		pixelData[i].g = newG > 255 ? 255 : newG;
 
 		//Red channel
 		if (norm1r <= 0.5f)
-			newR = 2 * norm1r * norm2r * 255 + 0.5f;
+			newR = (unsigned char)(2 * norm1r * norm2r * 255 + 0.5f);
 		else
-			newR = 1 - (2 * (1 - norm1r) * (1 - norm2r) * 255.f) + 0.5f;
+			newR = (unsigned char)(1 - (2 * (1 - norm1r) * (1 - norm2r) * 255.f) + 0.5f);
 
 		pixelData[i].r = newR > 255 ? 255 : newR;
 		
@@ -201,18 +201,14 @@ void TGAImage::add(unsigned int r, unsigned int g, unsigned int b) {
 }
 
 void TGAImage::scale(float r, float g, float b) {
-	for (int i = 0; i < numPixels; i++) {
-		float newR = pixelData[i].r / 255.f,
-			newG = pixelData[i].g / 255.f,
-			newB = pixelData[i].b / 255.f;
+	for (unsigned int i = 0; i < numPixels; i++) {
+		float newR = (pixelData[i].r / 255.f * r * 255) + 0.5f,
+			newG = (pixelData[i].g / 255.f * g * 255) + 0.5f,
+			newB = (pixelData[i].b / 255.f * b * 255) + 0.5f;
 
-		newR *= r;
-		newG *= g;
-		newB *= b;
-
-		pixelData[i].r = (unsigned char)(newR * 255 + 0.5f);
-		pixelData[i].g = (unsigned char)(newG * 255 + 0.5f);
-		pixelData[i].b = (unsigned char)(newB * 255 + 0.5f);
+		pixelData[i].r = newR > 255 ? 255 : (unsigned char)newR;
+		pixelData[i].g = newG > 255 ? 255: (unsigned char)newG;
+		pixelData[i].b = newB > 255 ? 255 : (unsigned char)newB;
 	}
 }
 
