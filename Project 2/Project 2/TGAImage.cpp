@@ -73,7 +73,6 @@ bool TGAImage::writeFile(const char* name) {
 }
 
 void TGAImage::multiply(TGAImage& bottom) {
-	//TGAImage output(bottom.header);
 
 	for (unsigned int i = 0; i < numPixels; i++) {
 		float norm1b = pixelData[i].b / 255.f,
@@ -88,12 +87,8 @@ void TGAImage::multiply(TGAImage& bottom) {
 					multG = (unsigned char)((norm1g * norm2g * 255.f) + 0.5f),
 					multR = (unsigned char)((norm1r * norm2r * 255.f) + 0.5f);
 
-		pixelData[i].b = multB;
-		pixelData[i].g = multG;
-		pixelData[i].r = multR;
+		pixelData[i] = Pixel(multB, multG, multR);
 	}
-
-	
 } 
 
 void TGAImage::subtract(TGAImage& bottom) {
@@ -140,9 +135,7 @@ void TGAImage::screen(TGAImage& bottom) {
 			multG = (unsigned char)((1 - (1 - norm1g) * (1 - norm2g)) * 255.f + 0.5f),
 			multR = (unsigned char)((1 - (1 - norm1r) * (1 - norm2r)) * 255.f + 0.5f);
 
-		pixelData[i].b = multB;
-		pixelData[i].g = multG;
-		pixelData[i].r = multR;
+		pixelData[i] = Pixel(multB, multG, multR);
 	}
 }
 
@@ -209,6 +202,17 @@ void TGAImage::scale(float r, float g, float b) {
 		pixelData[i].r = newR > 255 ? 255 : (unsigned char)newR;
 		pixelData[i].g = newG > 255 ? 255: (unsigned char)newG;
 		pixelData[i].b = newB > 255 ? 255 : (unsigned char)newB;
+	}
+}
+
+void TGAImage::flip() {
+	TGAImage flipped(header);
+	for (unsigned int i = 0; i < numPixels; i++) {
+		flipped.pixelData[numPixels - 1 - i] = pixelData[i];
+	}
+
+	for (unsigned int i = 0; i < numPixels; i++) {
+		pixelData[i] = flipped.pixelData[i];
 	}
 }
 
@@ -310,5 +314,3 @@ void TGAImage::TGAHeader::printHeader() {
 	cout << "Bits per pixel: " << (int)bitsPerPixel << endl;
 	cout << "Image Descriptor: " << (int)imageDescriptor << endl;
 }
-
-

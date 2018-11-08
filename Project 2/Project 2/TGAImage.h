@@ -4,7 +4,7 @@
 #include <iostream>
 using namespace std;
 
-struct TGAImage {
+class TGAImage {
 
 	struct TGAHeader {
 		char idLength;
@@ -25,7 +25,7 @@ struct TGAImage {
 		char imageDescriptor;
 
 		TGAHeader(ifstream& file);
-		TGAHeader(const TGAHeader& a); //Necessary?
+		TGAHeader(const TGAHeader& a);
 		TGAHeader() {}
 
 		void writeHeader(ofstream& file);
@@ -38,6 +38,7 @@ struct TGAImage {
 	unsigned int numPixels;
 	Pixel* pixelData;
 
+public:
 	//Constructor: Takes a filename, loads the data
 	//TGAImage(short width, short height);
 	TGAImage();
@@ -55,6 +56,7 @@ struct TGAImage {
 	void overlay(TGAImage& a);
 	void add(unsigned int r, unsigned int g, unsigned int b);
 	void scale(float r = 1, float g = 1, float b = 1);
+	void flip();
 
 	/*Compare*/
 	unsigned int compareTo(TGAImage& correct);

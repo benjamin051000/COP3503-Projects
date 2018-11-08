@@ -24,13 +24,13 @@ int main(int argc, char** argv) {
 	Task 7: Complete
 	Task 8: 
 	Task 9: 
-	Task 10: 
+	Task 10: Complete
 	*/
 
-	/*task1();
+	task1();
 	task2();
 	task3();
-	task4();*/
+	task4();
 	task5();
 	task6();
 	task7();
@@ -168,4 +168,16 @@ void task9() {
 }
 
 void task10() {
+	TGAImage a("input\\text2.tga"),
+		correct("examples\\EXAMPLE_part10.tga");
+
+	a.flip();
+	a.writeFile("output\\part10.tga");
+
+	if (a.compareTo(correct) == 0) {
+		cout << "Task 10 complete." << endl;
+	}
+	else {
+		cout << "Task 10 has errors." << endl;
+	}
 }
