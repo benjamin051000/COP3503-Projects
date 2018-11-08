@@ -155,7 +155,7 @@ void TGAImage::overlay(TGAImage& bottom) {
 
 		//Blue channel
 		if (norm1b <= 0.5f)
-			newB = (unsigned char)(2 * norm1b * norm2b * 255 + 0.5f);
+			newB = (unsigned char)(2 * norm1b * norm2b * 255.f + 0.5f);
 		else
 			newB = (unsigned char)(1 - (2 * (1 - norm1b) * (1 - norm2b) * 255.f) + 0.5f);
 		
@@ -163,7 +163,7 @@ void TGAImage::overlay(TGAImage& bottom) {
 
 		//Green channel
 		if (norm1g <= 0.5f)
-			newG = (unsigned char)(2 * norm1g * norm2g * 255 + 0.5f);
+			newG = (unsigned char)(2 * norm1g * norm2g * 255.f + 0.5f);
 		else
 			newG = (unsigned char)(1 - (2 * (1 - norm1g) * (1 - norm2g) * 255.f) + 0.5f);
 
@@ -171,7 +171,7 @@ void TGAImage::overlay(TGAImage& bottom) {
 
 		//Red channel
 		if (norm1r <= 0.5f)
-			newR = (unsigned char)(2 * norm1r * norm2r * 255 + 0.5f);
+			newR = (unsigned char)(2 * norm1r * norm2r * 255.f + 0.5f);
 		else
 			newR = (unsigned char)(1 - (2 * (1 - norm1r) * (1 - norm2r) * 255.f) + 0.5f);
 
