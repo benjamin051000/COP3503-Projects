@@ -49,10 +49,12 @@ struct TGAImage {
 	bool writeFile(const char* name);
 
 	/*Image Manipulation*/
-	TGAImage multiply(const TGAImage& a) const;
-	TGAImage subtract(const TGAImage& a) const;
-	TGAImage screen(const TGAImage& a) const;
-	TGAImage overlay(const TGAImage& a) const;
+	void multiply(TGAImage& a);
+	void subtract(TGAImage& a);
+	void screen(TGAImage& a);
+	void overlay(TGAImage& a);
+	void add(unsigned int r, unsigned int g, unsigned int b);
+	void scale(float r = 1, float g = 1, float b = 1);
 
 	/*Compare*/
 	unsigned int compareTo(TGAImage& correct);

@@ -16,7 +16,7 @@ TGAImage::TGAImage(const TGAImage& a) {
 	pixelData = new Pixel[numPixels];
 
 	for (unsigned int i = 0; i < numPixels; i++) {
-		pixelData[i] = Pixel(a.pixelData[i].b, a.pixelData[i].g, a.pixelData[i].r);//a.pixelData[i];
+		pixelData[i] = Pixel(a.pixelData[i].b, a.pixelData[i].g, a.pixelData[i].r);//bottom.pixelData[i];
 	}
 }
 
@@ -72,88 +72,148 @@ bool TGAImage::writeFile(const char* name) {
 	return true;
 }
 
-TGAImage TGAImage::multiply(const TGAImage& a) const {
-	TGAImage output(a.header);
+void TGAImage::multiply(TGAImage& bottom) {
+	//TGAImage output(bottom.header);
 
-	for (unsigned int i = 0; i < output.numPixels; i++) {
+	for (unsigned int i = 0; i < numPixels; i++) {
 		float norm1b = pixelData[i].b / 255.f,
 			   norm1g = pixelData[i].g / 255.f,
 			   norm1r = pixelData[i].r / 255.f;
 
-		float norm2b = a.pixelData[i].b / 255.f,
-			   norm2g = a.pixelData[i].g / 255.f,
-			   norm2r = a.pixelData[i].r / 255.f;
+		float norm2b = bottom.pixelData[i].b / 255.f,
+			   norm2g = bottom.pixelData[i].g / 255.f,
+			   norm2r = bottom.pixelData[i].r / 255.f;
 
 		unsigned char multB = (norm1b * norm2b * 255.f) + 0.5f,
 					multG = (norm1g * norm2g * 255.f) + 0.5f,
 					multR = (norm1r * norm2r * 255.f) + 0.5f;
 
-		output.pixelData[i].b = multB;
-		output.pixelData[i].g = multG;
-		output.pixelData[i].r = multR;
+		pixelData[i].b = multB;
+		pixelData[i].g = multG;
+		pixelData[i].r = multR;
 	}
 
-	return output;
+	
 } 
 
-TGAImage TGAImage::subtract(const TGAImage & a) const {
-	TGAImage output(a.header);
+void TGAImage::subtract(TGAImage& bottom) {
 
-	for (unsigned int i = 0; i < output.numPixels; i++) {
+	for (unsigned int i = 0; i < numPixels; i++) {
 
-		int topR = (int)a.pixelData[i].r,
-			bottomR = (int)pixelData[i].r;
-		int outputR = topR - bottomR;
+		int bottomR = (int)bottom.pixelData[i].r,
+			topR = (int)pixelData[i].r;
+		int outputR = bottomR - topR;
 		if (outputR < 0)
 			outputR = 0;
 		
-		int topG = (int)a.pixelData[i].g,
-			bottomG = (int)pixelData[i].g;
-		int outputG = topG - bottomG;
+		int bottomG = (int)bottom.pixelData[i].g,
+			topG = (int)pixelData[i].g;
+		int outputG = bottomG - topG;
 		if (outputG < 0)
 			outputG = 0;
 
-		int topB = (int)a.pixelData[i].b,
-			bottomB = (int)pixelData[i].b;
-		int outputB = topB - bottomB;
+		int bottomB = (int)bottom.pixelData[i].b,
+			topB = (int)pixelData[i].b;
+		int outputB = bottomB - topB;
 		if (outputB < 0)
 			outputB = 0;
 
-		output.pixelData[i].r = outputR;
-		output.pixelData[i].g = outputG;
-		output.pixelData[i].b = outputB;
+		pixelData[i].r = outputR;
+		pixelData[i].g = outputG;
+		pixelData[i].b = outputB;
 	}
-
-	return output;
 }
 
-TGAImage TGAImage::screen(const TGAImage & a) const {
+void TGAImage::screen(TGAImage& bottom) {
 	// 1-(1-A)*(1-B)
-	TGAImage output(a.header);
 
-	for (unsigned int i = 0; i < output.numPixels; i++) {
+	for (unsigned int i = 0; i < numPixels; i++) {
 		float norm1b = pixelData[i].b / 255.f,
 			norm1g = pixelData[i].g / 255.f,
 			norm1r = pixelData[i].r / 255.f;
 
-		float norm2b = a.pixelData[i].b / 255.f,
-			norm2g = a.pixelData[i].g / 255.f,
-			norm2r = a.pixelData[i].r / 255.f;
+		float norm2b = bottom.pixelData[i].b / 255.f,
+			norm2g = bottom.pixelData[i].g / 255.f,
+			norm2r = bottom.pixelData[i].r / 255.f;
 
 		unsigned char multB = (1 - (1 - norm1b) * (1 -norm2b)) * 255.f + 0.5f,
 			multG = (1 - (1 - norm1g) * (1 - norm2g)) * 255.f + 0.5f,
 			multR = (1 - (1 - norm1r) * (1 - norm2r)) * 255.f + 0.5f;
 
-		output.pixelData[i].b = multB;
-		output.pixelData[i].g = multG;
-		output.pixelData[i].r = multR;
+		pixelData[i].b = multB;
+		pixelData[i].g = multG;
+		pixelData[i].r = multR;
 	}
-
-	return output;
 }
 
-TGAImage TGAImage::overlay(const TGAImage & a) const {
-	return NULL;
+void TGAImage::overlay(TGAImage& bottom) {
+
+	for (unsigned int i = 0; i < numPixels; i++) {
+
+		float norm1b = bottom.pixelData[i].b / 255.f,
+			norm1g = bottom.pixelData[i].g / 255.f,
+			norm1r = bottom.pixelData[i].r / 255.f;
+
+		float norm2b = pixelData[i].b / 255.f,
+			norm2g = pixelData[i].g / 255.5f,
+			norm2r = pixelData[i].r / 255.f;
+
+		unsigned char newR, newG, newB;
+
+		//Blue channel
+		if (norm1b <= 0.5f)
+			newB = 2 * norm1b * norm2b * 255 + 0.5f;
+		else
+			newB = 1 - (2 * (1 - norm1b) * (1 - norm2b) * 255.f) + 0.5f;
+		
+		pixelData[i].b = newB > 255 ? 255 : newB;
+
+		//Green channel
+		if (norm1g <= 0.5f)
+			newG = 2 * norm1g * norm2g * 255 + 0.5f;
+		else
+			newG = 1 - (2 * (1 - norm1g) * (1 - norm2g) * 255.f) + 0.5f;
+
+		pixelData[i].g = newG > 255 ? 255 : newG;
+
+		//Red channel
+		if (norm1r <= 0.5f)
+			newR = 2 * norm1r * norm2r * 255 + 0.5f;
+		else
+			newR = 1 - (2 * (1 - norm1r) * (1 - norm2r) * 255.f) + 0.5f;
+
+		pixelData[i].r = newR > 255 ? 255 : newR;
+		
+	}
+}
+
+void TGAImage::add(unsigned int r, unsigned int g, unsigned int b) {
+	for (unsigned int i = 0; i < numPixels; i++) {
+		int newR = (int)pixelData[i].r + r;
+		pixelData[i].r = newR > 255 ? 255 : newR;
+
+		int newG = (int)pixelData[i].g + g;
+		pixelData[i].g = newG > 255 ? 255 : newG;
+
+		int newB = (int)pixelData[i].b + b;
+		pixelData[i].b = newB > 255 ? 255 : newB;
+	}
+}
+
+void TGAImage::scale(float r, float g, float b) {
+	for (int i = 0; i < numPixels; i++) {
+		float newR = pixelData[i].r / 255.f,
+			newG = pixelData[i].g / 255.f,
+			newB = pixelData[i].b / 255.f;
+
+		newR *= r;
+		newG *= g;
+		newB *= b;
+
+		pixelData[i].r = (unsigned char)(newR * 255 + 0.5f);
+		pixelData[i].g = (unsigned char)(newG * 255 + 0.5f);
+		pixelData[i].b = (unsigned char)(newB * 255 + 0.5f);
+	}
 }
 
 unsigned int TGAImage::compareTo(TGAImage& correct) {

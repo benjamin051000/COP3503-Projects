@@ -19,24 +19,24 @@ int main(int argc, char** argv) {
 	Task 2: Complete
 	Task 3: Complete
 	Task 4: Complete
-	Task 5: 
-	Task 6: 
+	Task 5: __Error!!!
+	Task 6: Complete
 	Task 7: 
 	Task 8: 
 	Task 9: 
 	Task 10: 
 	*/
 
-	task1();
+	/*task1();
 	task2();
 	task3();
-	task4();
+	task4();*/
 	task5();
-	task6();
+	/*task6();
 	task7();
 	task8();
 	task9();
-	task10();
+	task10();*/
 	
 	return 0;
 }
@@ -47,13 +47,13 @@ int main(int argc, char** argv) {
 Methods: http://www.simplefilter.de/en/basics/mixmods.html */
 
 void task1() {
-	TGAImage top("input\\layer1.tga"), bottom("input\\pattern1.tga"),
+	TGAImage a("input\\layer1.tga"), b("input\\pattern1.tga"),
 		correct("examples\\EXAMPLE_part1.tga");
 
-	TGAImage output = top.multiply(bottom);
-
-	if (output.compareTo(correct) == 0) {
-		output.writeFile("output\\part1.tga");
+	a.multiply(b);
+	a.writeFile("output\\part1.tga");
+	
+	if (a.compareTo(correct) == 0) {
 		cout << "Task 1 complete." << endl;
 	}
 	else {
@@ -62,28 +62,30 @@ void task1() {
 }
 
 void task2() {
-	TGAImage top("input\\layer2.tga"), bottom("input\\car.tga"),
+	TGAImage a("input\\layer2.tga"), b("input\\car.tga"),
 		correct("examples\\EXAMPLE_part2.tga");
 
-	TGAImage output = top.subtract(bottom); //may be backwards
+	a.subtract(b); //may be backwards
+	a.writeFile("output\\part2.tga");
 
-	if (output.compareTo(correct) == 0) {
-		output.writeFile("output\\part2.tga");
+	if (a.compareTo(correct) == 0) {
 		cout << "Task 2 complete." << endl;
 	}
 	else {
 		cout << "Task 2 has errors." << endl;
 	}
+	
 }
 
 void task3() {
 	TGAImage a("input\\layer1.tga"), b("input\\pattern2.tga"), c("input\\text.tga"), 
 		correct("examples\\EXAMPLE_part3.tga");
-	
-	TGAImage output = c.screen(a.multiply(b));
 
-	if (output.compareTo(correct) == 0) {
-		output.writeFile("output\\part3.tga");
+	a.multiply(b);
+	c.screen(a);
+	c.writeFile("output\\part3.tga");
+
+	if (c.compareTo(correct) == 0) {	
 		cout << "Task 3 complete." << endl;
 	}
 	else {
@@ -95,10 +97,12 @@ void task4() {
 	TGAImage a("input\\layer2.tga"), b("input\\circles.tga"), c("input\\pattern2.tga"),
 		correct("examples\\EXAMPLE_part4.tga");
 
-	TGAImage output = c.subtract(a.multiply(b)); //subtract may be backwards
-
-	if (output.compareTo(correct) == 0) {
-		output.writeFile("output\\part4.tga");
+	a.multiply(b);
+	c.subtract(a); //subtract may be backwards
+	c.writeFile("output\\part4.tga");
+	
+	if (c.compareTo(correct) == 0) {
+		
 		cout << "Task 4 complete." << endl;
 	}
 	else {
@@ -110,10 +114,10 @@ void task5() {
 	TGAImage a("input\\layer1.tga"), b("input\\pattern1.tga"),
 		correct("examples\\EXAMPLE_part5.tga");
 
-	TGAImage output = a.overlay(b);
-
-	if (output.compareTo(correct) == 0) {
-		output.writeFile("output\\part5.tga");
+	b.overlay(a);
+	b.writeFile("output\\part5.tga");
+	
+	if (b.compareTo(correct) == 0) {
 		cout << "Task 5 complete." << endl;
 	}
 	else {
@@ -122,12 +126,42 @@ void task5() {
 }
 
 void task6() {
+	TGAImage a("input\\car.tga"),
+		correct("examples\\EXAMPLE_part6.tga");
+
+	a.add(0, 200, 0);
+	a.writeFile("output\\part6.tga");
+
+	if (a.compareTo(correct) == 0) {
+		cout << "Task 6 complete." << endl;
+	}
+	else {
+		cout << "Task 6 has errors." << endl;
+	}
 }
 
 void task7() {
+	TGAImage a("input\\car.tga"),
+		correct("examples\\EXAMPLE_part7.tga");
+
+	a.scale(4, 1, 0);
+	a.writeFile("output\\part7.tga");
+
+	if (a.compareTo(correct) == 0) {
+		cout << "Task 7 complete." << endl;
+	}
+	else {
+		cout << "Task 7 has errors." << endl;
+	}
 }
 
 void task8() {
+	TGAImage a("input\\car.tga"),
+		correctR("examples\\EXAMPLE_part8_r.tga"),
+		correctG("examples\\EXAMPLE_part8_g.tga"),
+		correctB("examples\\EXAMPLE_part8_b.tga");
+
+
 }
 
 void task9() {
