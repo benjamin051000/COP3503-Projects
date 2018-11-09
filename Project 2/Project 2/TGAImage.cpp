@@ -55,8 +55,33 @@ TGAImage::~TGAImage() {
 
 TGAImage::TGAImage(TGAImage & r, TGAImage & g, TGAImage & b) {
 	header = TGAHeader(r.header);
+	numPixels = r.numPixels;
+	pixelData = new Pixel[numPixels];
 
+	for (unsigned int i = 0; i < numPixels; i++) {
+		pixelData[i].r = r.pixelData[i].r;
+		pixelData[i].g = g.pixelData[i].g;
+		pixelData[i].b = b.pixelData[i].b;
+	}
+}
 
+TGAImage::TGAImage(TGAImage& tl, TGAImage& tr, TGAImage& bl, TGAImage& br) {
+	header = TGAHeader(tl.header);
+	header.width *= 2;
+	header.height *= 2;
+	numPixels = header.width * header.height;
+	pixelData = new Pixel[numPixels];
+
+		//If this works, victory royale
+	for (unsigned int i = 0; i < numPixels / 2; i++) {
+		pixelData[i] = (i % header.height) % (header.width / 2) > 0 ? 
+			bl.pixelData[i] : br.pixelData[i]; 
+	}
+
+	for (unsigned int i = numPixels / 2; i < numPixels; i++) {
+		pixelData[i] = (i % header.height) % (header.width / 2) > 0 ?
+			tr.pixelData[i] : tl.pixelData[i];
+	}
 }
 
 bool TGAImage::writeFile(const char* name) {
@@ -183,9 +208,9 @@ void TGAImage::overlay(TGAImage& bottom) {
 
 		pixelData[i].r = newR > 255 ? 255 : (unsigned char)newR;
 		
-		if (i % 500 == 0)
+		/*if (i % 500 == 0)
 			cout << (int)pixelData[i].r << '\t' << (int)pixelData[i].g 
-			<< '\t' << (int)pixelData[i].b << endl;
+			<< '\t' << (int)pixelData[i].b << endl;*/
 	}
 }
 

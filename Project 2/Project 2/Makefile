@@ -1,5 +1,6 @@
 main:
-	g++ -o main main.cpp
+	cl /EHsc *.cpp main
+	main
 clean:
-	rm main.exe
-	rm *.o
+	del main.exe
+	del *.obj
