@@ -12,6 +12,7 @@ void task7();
 void task8();
 void task9();
 void task10();
+void extraCredit();
 
 int main() {
 	/*
@@ -19,24 +20,25 @@ int main() {
 	Task 2: Complete
 	Task 3: Complete
 	Task 4: Complete
-	Task 5: ---Error!!!
+	Task 5: --------Error!!!
 	Task 6: Complete
 	Task 7: Complete
 	Task 8: Complete
-	Task 9: 
+	Task 9: Complete
 	Task 10: Complete
 	*/
 
 	/*task1();
 	task2();
 	task3();
-	task4();*/
+	task4();
 	task5();
-	/*task6();
+	task6();
 	task7();
-	task8();*/
+	task8();
 	task9();
-	//task10();
+	task10();*/
+	extraCredit();
 	
 	return 0;
 }
@@ -65,7 +67,7 @@ void task2() {
 	TGAImage a("input\\layer2.tga"), b("input\\car.tga"),
 		correct("examples\\EXAMPLE_part2.tga");
 
-	a.subtract(b); //may be backwards
+	a.subtract(b);
 	a.writeFile("output\\part2.tga");
 
 	if (a.compareTo(correct) == 0) {
@@ -196,7 +198,14 @@ void task9() {
 		correct("examples\\EXAMPLE_part9.tga");
 
 	TGAImage combined(red, green, blue);
+	combined.writeFile("output\\part9.tga");
 
+	if (combined.compareTo(correct) == 0) {
+		cout << "Task 9 complete." << endl;
+	}
+	else {
+		cout << "Task 9 has errors." << endl;
+	}
 }
 
 void task10() {
@@ -211,5 +220,21 @@ void task10() {
 	}
 	else {
 		cout << "Task 10 has errors." << endl;
+	}
+}
+
+void extraCredit() {
+	TGAImage tl("input\\car.tga"), tr("input\\circles.tga"), 
+		bl("input\\pattern1.tga"), br("input\\text.tga"),
+		correct("examples\\EXAMPLE_extraCredit.tga");
+
+	TGAImage combined(tl, tr, bl, br);
+	combined.writeFile("output\\extraCredit.tga");
+
+	if (combined.compareTo(correct) == 0) {
+		cout << "Extra credit complete." << endl;
+	}
+	else {
+		cout << "Extra credit has errors." << endl;
 	}
 }

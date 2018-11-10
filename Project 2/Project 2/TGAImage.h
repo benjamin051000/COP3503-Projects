@@ -47,6 +47,7 @@ public:
 	TGAImage(const char* file);
 	~TGAImage();
 	TGAImage(TGAImage& r, TGAImage& g, TGAImage& b);
+	TGAImage(TGAImage& tl, TGAImage& tr, TGAImage& bl, TGAImage& br);
 
 	bool writeFile(const char* name);
 
