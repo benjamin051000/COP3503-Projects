@@ -183,9 +183,9 @@ void TGAImage::overlay(TGAImage& bottom) {
 
 		pixelData[i].r = newR > 255 ? 255 : (unsigned char)newR;
 		
-		if (i % 500 == 0)
+		/*if (i % 500 == 0)
 			cout << (int)pixelData[i].r << '\t' << (int)pixelData[i].g 
-			<< '\t' << (int)pixelData[i].b << endl;
+			<< '\t' << (int)pixelData[i].b << endl;*/
 	}
 }
 

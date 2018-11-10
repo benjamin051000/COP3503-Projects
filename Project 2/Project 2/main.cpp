@@ -114,10 +114,10 @@ void task5() {
 	TGAImage a("input\\layer1.tga"), b("input\\pattern1.tga"),
 		correct("examples\\EXAMPLE_part5.tga");
 
-	b.overlay(a);
-	b.writeFile("output\\part5.tga");
+	a.overlay(b);
+	a.writeFile("output\\part5.tga");
 	
-	if (b.compareTo(correct) == 0) {
+	if (a.compareTo(correct) == 0) {
 		cout << "Task 5 complete." << endl;
 	}
 	else {
