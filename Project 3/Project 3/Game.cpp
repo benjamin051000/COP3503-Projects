@@ -14,6 +14,7 @@ void Game::PrintBoard() const {
 }
 
 Game::Game() {
+
 }
 
 Game::Mine::Mine(bool m) {
