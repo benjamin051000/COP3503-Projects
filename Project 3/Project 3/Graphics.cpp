@@ -1,4 +1,5 @@
 #include "Graphics.h"
+#include "Game.h"
 
 bool Graphics::gameLoop() {
 	while (window.isOpen()) {
@@ -14,21 +15,37 @@ bool Graphics::gameLoop() {
 	return false;
 }
 
+
+
+
 void Graphics::repaint() {
 	window.clear();
 	
 	/*Draw graphics here*/
-	sf::CircleShape a(150);
-	a.setFillColor(sf::Color::Green);
-	window.draw(a);
+	for (int r = 0; r < game->GetRows(); r++) {
+		for (int c = 0; c < game->GetCols(); c++) {
+			//offset by 32 pixels each iteration
+			Tile tile = game->getTile(r, c);
+			sf::Sprite tileSprite;
+			
+			if (tile.revealed) {
+				if (tile.mine) {
+					tileSprite = spriteMap["mine"];
+				}
+				//else, get the number it should be
+			}
+			else {
+				tileSprite = spriteMap["tile_hidden"];
+			}
 
-	window.draw(spriteMap["face_happy"]);
+			tileSprite.setPosition(sf::Vector2f(32.f * c, 32.f * r));
+			window.draw(tileSprite);
+		}
+	}
 
 
 
-
-
-
+	/*Finally, display the window*/
 	window.display();
 }
 
@@ -76,7 +93,8 @@ void Graphics::loadSprites() {
 	}
 }
 
-Graphics::Graphics()
+Graphics::Graphics(Game* g)
 	: window(sf::VideoMode(WIDTH, HEIGHT), "Minesweeper") {
+	game = g;
 	loadSprites();
 }

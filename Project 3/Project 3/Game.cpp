@@ -1,7 +1,8 @@
 #include "Game.h"
+#include "Graphics.h"
 
 void Game::gameLoop() {
-	while (gameWindow.gameLoop()) {
+	while (gameWindow->gameLoop()) {
 		//cout << "Running..." << endl;
 		/*TODO Game logic, intertwined with graphics*/
 	}
@@ -21,9 +22,22 @@ void Game::PrintBoard() const {
 }
 
 Game::Game() {
+	gameWindow = new Graphics(this); //can't create this on stack? ugh
 	gameLoop();
 }
 
-Game::Tile::Tile(bool m) {
-	mine = m;
+Game::~Game() {
+	delete gameWindow;
+}
+
+const int Game::GetRows() const {
+	return rows;
+}
+
+const int Game::GetCols() const {
+	return cols;
+}
+
+Tile Game::getTile(int r, int c) const {
+	return mineField[r, c];
 }
