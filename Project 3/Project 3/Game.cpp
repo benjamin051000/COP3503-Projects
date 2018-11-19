@@ -1,5 +1,12 @@
 #include "Game.h"
 
+void Game::gameLoop() {
+	while (gameWindow.gameLoop()) {
+		//cout << "Running..." << endl;
+		/*TODO Game logic, intertwined with graphics*/
+	}
+}
+
 void Game::PrintBoard() const {
 	int i = 1;
 	for (auto& row : mineField) {
@@ -14,7 +21,7 @@ void Game::PrintBoard() const {
 }
 
 Game::Game() {
-
+	gameLoop();
 }
 
 Game::Tile::Tile(bool m) {
