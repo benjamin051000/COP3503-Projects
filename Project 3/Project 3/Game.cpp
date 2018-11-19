@@ -3,7 +3,7 @@
 
 void Game::gameLoop() {
 	while (gameWindow->gameLoop()) { //this is a terrible idea and is wrong. or maybe not (?)
-		cout << "yee";
+		
 		/*TODO Game logic, intertwined with graphics*/
 	}
 }
