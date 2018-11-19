@@ -4,7 +4,7 @@ void Game::PrintBoard() const {
 	int i = 1;
 	for (auto& row : mineField) {
 		for (auto& tile : row) {
-			cout << (tile.isMine ? "1" : "0");
+			cout << (tile.mine ? "1" : "0");
 			if (i % cols == 0) {
 				cout << endl;
 			}
@@ -17,6 +17,6 @@ Game::Game() {
 
 }
 
-Game::Mine::Mine(bool m) {
-	isMine = m;
+Game::Tile::Tile(bool m) {
+	mine = m;
 }
