@@ -15,9 +15,6 @@ bool Graphics::gameLoop() {
 	return false;
 }
 
-
-
-
 void Graphics::repaint() {
 	window.clear();
 	
