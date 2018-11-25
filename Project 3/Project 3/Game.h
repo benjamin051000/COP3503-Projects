@@ -11,7 +11,7 @@ class Game {
 	/*Number of mines and number of tiles*/
 	const int numMines = 50, numTiles = 400;
 
-	
+	bool gameRunning = true;
 	
 	/*Minefield of Tile objects*/
 	static const int rows = 16, cols = 25;

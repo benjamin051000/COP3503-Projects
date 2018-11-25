@@ -1,7 +1,7 @@
 #include "Graphics.h"
 #include "Game.h"
 
-bool Graphics::gameLoop() {
+void Graphics::update() {
 	while (window.isOpen()) {
 		sf::Event event;
 		while (window.pollEvent(event)) {
@@ -10,9 +10,7 @@ bool Graphics::gameLoop() {
 		}
 
 		repaint();
-		return true;
 	}
-	return false;
 }
 
 void Graphics::repaint() {

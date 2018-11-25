@@ -28,5 +28,5 @@ class Graphics {
 public:
 	Graphics(Game* g);
 	
-	bool gameLoop();
+	void update();
 };

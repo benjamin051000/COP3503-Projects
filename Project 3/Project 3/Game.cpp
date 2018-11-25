@@ -2,7 +2,7 @@
 #include "Graphics.h"
 
 void Game::gameLoop() {
-	while (gameWindow->gameLoop()) { //this is a terrible idea and is wrong. or maybe not (?)
+	while (gameRunning) { //this is a terrible idea and is wrong. or maybe not (?)
 		
 		/*TODO Game logic, intertwined with graphics*/
 	}
