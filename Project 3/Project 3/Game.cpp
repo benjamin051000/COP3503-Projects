@@ -20,7 +20,7 @@ void Game::PrintBoard() const {
 		}
 	}
 }
-
+//yee
 Game::Game() {
 	gameWindow = new Graphics(this); //can't create this on stack? ugh
 	gameLoop();
