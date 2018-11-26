@@ -21,6 +21,7 @@ class Game {
 	
 	/*"Digs" a tile up and reveals its state. Checks surrounding tiles to determine state.*/
 	void Reveal(int r, int c);
+	void GameOver();
 
 public:
 	/*Prints the board in the console. 1s are mines, 0s are blanks.*/

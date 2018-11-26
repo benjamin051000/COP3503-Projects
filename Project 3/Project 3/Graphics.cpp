@@ -26,7 +26,7 @@ void Graphics::repaint() {
 	for (int r = 0; r < game->GetRows(); r++) {
 		for (int c = 0; c < game->GetCols(); c++) {
 			//offset by 32 pixels each iteration
-			Tile tile = game->getTile(r, c);
+			Tile tile = game->getTile(r, c); //Get a pointer? for speed or nah
 			sf::Sprite tileSprite;
 
 			if (tile.revealed) {

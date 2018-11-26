@@ -2,33 +2,67 @@
 #include "Graphics.h"
 
 void Game::gameLoop() {
+	gameWindow->update();
+
 	while (running) {
 		/*Check for a click*/
-		sf::Event mouseEvent;
+
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-			/*Get tile clicked*/
+			
 			sf::Vector2i position = gameWindow->getMouseCoords();
+
+			/*Wait until LMB is released*/
+			while (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {}
 
 			/*Reveal tile*/
-			int minePixelNum = 32;
-			Reveal(position.y / minePixelNum, position.x / minePixelNum); //y is row, x is col
+			if (position.x > 0 && position.y > 0) {
+				int r = position.y / 32, c = position.x / 32;
+				if (!mineField[r][c].flagged) {
+					Reveal(r, c); //y is row, x is col
+				}
+			}
+
+			/*Update graphics window.*/
+			gameWindow->update();
 		}
 		else if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
+			
 			sf::Vector2i position = gameWindow->getMouseCoords();
-			mineField[position.y / 32][position.x / 32].flagged = true;
-		}
 
-		/*Update graphics window.*/
-		gameWindow->update();
+			/*Wait until RMB is released*/
+			while (sf::Mouse::isButtonPressed(sf::Mouse::Right)) {}
+
+			/*Toggle flag*/
+			if (position.x > 0 && position.y > 0) {
+				int r = position.y / 32, c = position.x / 32;
+				if (!mineField[r][c].revealed) {
+					mineField[r][c].flagged = !mineField[r][c].flagged;
+				}
+			}
+
+			/*Update graphics window.*/
+			gameWindow->update();
+		}
+		
 	}
 }
 
 void Game::Reveal(int r, int c) {
-	cout << r << '\t' << c << endl;
 	mineField[r][c].revealed = true;
 
 	if (mineField[r][c].mine) {
-		cout << "Game over!" << endl;
+		GameOver();
+	}
+}
+
+void Game::GameOver() {
+	cout << "Game over!" << endl;
+	for (auto& row : mineField) {
+		for (Tile& tile : row) {
+			if (tile.mine && !tile.flagged) {
+				tile.revealed = true;
+			}
+		}
 	}
 }
 
