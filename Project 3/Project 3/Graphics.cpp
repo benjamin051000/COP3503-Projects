@@ -22,10 +22,11 @@ sf::Vector2i Graphics::getMouseCoords() const {
 void Graphics::repaint() {
 	window.clear();
 	
-	/*Draw graphics here*/
+	/*Draw minefield*/
 	for (int r = 0; r < game->GetRows(); r++) {
 		for (int c = 0; c < game->GetCols(); c++) {
-			//offset by 32 pixels each iteration
+			
+			/*offset by 32 pixels each iteration*/
 			Tile tile = game->getTile(r, c); //Get a pointer? for speed or nah
 			sf::Sprite tileSprite;
 
@@ -56,6 +57,13 @@ void Graphics::repaint() {
 
 		}
 	}
+
+	/*Draw bottom sprites*/
+	sf::Sprite face = spriteMap["face_happy"];
+	face.setPosition(sf::Vector2f(WIDTH / 2 - 32, HEIGHT - 64)); //Is this an acceptable position for the face?
+	window.draw(face);
+
+	sf::Sprite debugButton = spriteMap["debug"];
 
 	/*Finally, display the window*/
 	window.display();
