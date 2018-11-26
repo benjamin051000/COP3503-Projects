@@ -2,5 +2,5 @@
 
 struct Tile {
 	bool mine, flagged, revealed;
-	Tile(bool m = false);
+	Tile(bool m = true);
 };

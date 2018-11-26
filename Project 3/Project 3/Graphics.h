@@ -22,11 +22,14 @@ class Graphics {
 	map<string, sf::Texture> textureMap; //Should this use Texture references?
 	map<string, sf::Sprite> spriteMap;
 	
+	/*Paints sprites.*/
 	void repaint();
-	/*TODO: Sprites, textures, etc.*/
 	void loadSprites();
+
 public:
 	Graphics(Game* g);
 	
+	/*Repaints window and checks if the window is X'ed out.*/
 	void update();
+	sf::Vector2i getMouseCoords() const;
 };

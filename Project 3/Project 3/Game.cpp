@@ -2,9 +2,33 @@
 #include "Graphics.h"
 
 void Game::gameLoop() {
-	while (gameRunning) { //this is a terrible idea and is wrong. or maybe not (?)
-		
-		/*TODO Game logic, intertwined with graphics*/
+	while (running) {
+		/*Check for a click*/
+		sf::Event mouseEvent;
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+			/*Get tile clicked*/
+			sf::Vector2i position = gameWindow->getMouseCoords();
+
+			/*Reveal tile*/
+			int minePixelNum = 32;
+			Reveal(position.y / minePixelNum, position.x / minePixelNum); //y is row, x is col
+		}
+		else if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
+			sf::Vector2i position = gameWindow->getMouseCoords();
+			mineField[position.y / 32][position.x / 32].flagged = true;
+		}
+
+		/*Update graphics window.*/
+		gameWindow->update();
+	}
+}
+
+void Game::Reveal(int r, int c) {
+	cout << r << '\t' << c << endl;
+	mineField[r][c].revealed = true;
+
+	if (mineField[r][c].mine) {
+		cout << "Game over!" << endl;
 	}
 }
 
@@ -20,9 +44,10 @@ void Game::PrintBoard() const {
 		}
 	}
 }
-//yee
+
 Game::Game() {
 	gameWindow = new Graphics(this); //can't create this on stack? ugh
+	PrintBoard();
 	gameLoop();
 }
 
@@ -39,5 +64,9 @@ const int Game::GetCols() const {
 }
 
 Tile Game::getTile(int r, int c) const {
-	return mineField[r, c];
+	return mineField[r][c];
+}
+
+void Game::StopRunning() {
+	running = false;
 }

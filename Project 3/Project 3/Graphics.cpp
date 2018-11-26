@@ -2,15 +2,21 @@
 #include "Game.h"
 
 void Graphics::update() {
-	while (window.isOpen()) {
+	if (window.isOpen()) {
 		sf::Event event;
 		while (window.pollEvent(event)) {
-			if (event.type == sf::Event::Closed)
+			if (event.type == sf::Event::Closed) {
+				game->StopRunning();
 				window.close();
+				return;
+			}
 		}
-
 		repaint();
 	}
+}
+
+sf::Vector2i Graphics::getMouseCoords() const {
+	return sf::Mouse::getPosition(window);
 }
 
 void Graphics::repaint() {
@@ -22,12 +28,9 @@ void Graphics::repaint() {
 			//offset by 32 pixels each iteration
 			Tile tile = game->getTile(r, c);
 			sf::Sprite tileSprite;
-			
+
 			if (tile.revealed) {
-				if (tile.mine) {
-					tileSprite = spriteMap["mine"];
-				}
-				//else, get the number it should be
+				tileSprite = spriteMap["tile_revealed"];
 			}
 			else {
 				tileSprite = spriteMap["tile_hidden"];
@@ -35,10 +38,24 @@ void Graphics::repaint() {
 
 			tileSprite.setPosition(sf::Vector2f(32.f * c, 32.f * r));
 			window.draw(tileSprite);
+
+			/*Overlay mines, flags, and numbers*/
+			if (tile.flagged) {
+				tileSprite = spriteMap["flag"];
+				tileSprite.setPosition(sf::Vector2f(32.f * c, 32.f * r));
+				window.draw(tileSprite);
+			}
+			else if (tile.revealed && tile.mine) {
+				tileSprite = spriteMap["mine"];
+				tileSprite.setPosition(sf::Vector2f(32.f * c, 32.f * r));
+				window.draw(tileSprite);
+			}
+			else {
+				/*Display number of adjacent mines*/
+			}
+
 		}
 	}
-
-
 
 	/*Finally, display the window*/
 	window.display();
@@ -89,7 +106,7 @@ void Graphics::loadSprites() {
 }
 
 Graphics::Graphics(Game* g)
-	: window(sf::VideoMode(WIDTH, HEIGHT), "Minesweeper") {
+	: window(sf::VideoMode(WIDTH, HEIGHT), "Minesweeper", sf::Style::Titlebar | sf::Style::Close) {
 	game = g;
 	loadSprites();
 }

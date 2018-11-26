@@ -2,5 +2,4 @@
 
 int main() {
 	Game g;
-	g.PrintBoard();
 }
