@@ -11,9 +11,14 @@ void Game::gameLoop() {
 			
 			sf::Vector2i position = gameWindow->getMouseCoords();
 
+			
+			
+
 			/*Wait until LMB is released*/
 			while (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {}
-
+			
+			/*Check buttons first*/
+			
 			/*Reveal tile*/
 			if (position.x > 0 && position.y > 0) {
 				int r = position.y / 32, c = position.x / 32;
@@ -80,9 +85,7 @@ void Game::PrintBoard() const {
 }
 
 Game::Game() {
-	gameWindow = new Graphics(this); //can't create this on stack? ugh
-	PrintBoard();
-	gameLoop();
+	NewGame();
 }
 
 Game::~Game() {
@@ -103,4 +106,10 @@ Tile Game::getTile(int r, int c) const {
 
 void Game::StopRunning() {
 	running = false;
+}
+
+void Game::NewGame() {
+	gameWindow = new Graphics(this); //can't create this on stack? ugh
+	PrintBoard();
+	gameLoop();
 }
