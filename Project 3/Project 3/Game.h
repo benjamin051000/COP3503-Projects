@@ -11,6 +11,8 @@ class Game {
 	/*Number of mines and number of tiles*/
 	const int numMines = 50, numTiles = 400;
 
+	/*Positions of the different menu options*/
+	
 	bool running = true;
 	
 	/*Minefield of Tile objects*/

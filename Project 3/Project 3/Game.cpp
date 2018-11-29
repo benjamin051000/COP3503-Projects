@@ -10,17 +10,15 @@ void Game::gameLoop() {
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 			
 			sf::Vector2i position = gameWindow->getMouseCoords();
-
-			
 			
 
 			/*Wait until LMB is released*/
 			while (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {}
-			
-			/*Check buttons first*/
-			
-			/*Reveal tile*/
+	
+
 			if (position.x > 0 && position.y > 0) {
+
+				/*Reveal tile*/
 				int r = position.y / 32, c = position.x / 32;
 				if (!mineField[r][c].flagged) {
 					Reveal(r, c); //y is row, x is col
@@ -48,8 +46,8 @@ void Game::gameLoop() {
 			/*Update graphics window.*/
 			gameWindow->update();
 		}
-		
-	}
+
+	} //end of while
 }
 
 void Game::Reveal(int r, int c) {
