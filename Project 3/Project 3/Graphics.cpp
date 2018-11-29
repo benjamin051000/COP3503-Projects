@@ -60,18 +60,18 @@ void Graphics::repaint() {
 
 	/*Draw bottom sprites*/	//This could be looped with an array of strings and ints or something, lessens number of sprites in mem (?)
 	sf::Sprite face = spriteMap["face_happy"];
-	face.setPosition(sf::Vector2f(WIDTH / 2 - 32, 16 * 32)); //Is this an acceptable position for the face?
+	face.setPosition(sf::Vector2f(WIDTH / 2 - 32.f, 16 * 32.f)); //Is this an acceptable position for the face?
 	window.draw(face);
 
 	sf::Sprite debugButton = spriteMap["debug"];
-	debugButton.setPosition(sf::Vector2f(WIDTH / 2 - 32, 16 * 32));
+	debugButton.setPosition(sf::Vector2f(WIDTH / 2 - 32.f, 16 * 32.f));
 	debugButton.move(sf::Vector2f(64 * 2, 0));
 	window.draw(debugButton);
 
 	for (int i = 1; i <= 2; i++) {
 		sf::Sprite testi = spriteMap["test_" + to_string(i)];
-		testi.setPosition(sf::Vector2f(WIDTH / 2 - 32, 16 * 32));
-		testi.move(sf::Vector2f(64 * (i + 2), 0));
+		testi.setPosition(sf::Vector2f(WIDTH / 2 - 32.f, 16 * 32.f));
+		testi.move(sf::Vector2f(64 * (i + 2.f), 0.f));
 		window.draw(testi);
 	}
 
