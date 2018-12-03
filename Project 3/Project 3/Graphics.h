@@ -32,4 +32,10 @@ public:
 	/*Repaints window and checks if the window is X'ed out.*/
 	void update();
 	sf::Vector2i getMouseCoords() const;
+	
+	/*Menu button coords*/
+	sf::Vector2f faceCoords,
+				 debugCoords,
+				 test1Coords,
+				 test2Coords;
 };

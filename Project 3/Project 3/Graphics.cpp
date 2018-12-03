@@ -46,7 +46,7 @@ void Graphics::repaint() {
 				tileSprite.setPosition(sf::Vector2f(32.f * c, 32.f * r));
 				window.draw(tileSprite);
 			}
-			else if (tile.revealed && tile.mine) {
+			else if ((tile.revealed || tile.debug) && tile.mine) {
 				tileSprite = spriteMap["mine"];
 				tileSprite.setPosition(sf::Vector2f(32.f * c, 32.f * r));
 				window.draw(tileSprite);
@@ -59,19 +59,26 @@ void Graphics::repaint() {
 	}
 
 	/*Draw bottom sprites*/	//This could be looped with an array of strings and ints or something, lessens number of sprites in mem (?)
-	sf::Sprite face = spriteMap["face_happy"];
-	face.setPosition(sf::Vector2f(WIDTH / 2 - 32.f, 16 * 32.f)); //Is this an acceptable position for the face?
+	sf::Sprite face;
+	if (game->gameover) {
+		face = spriteMap["face_lose"];
+	}
+	else {
+		face = spriteMap["face_happy"];
+	}
+	
+	face.setPosition(faceCoords); //Is this an acceptable position for the face?
 	window.draw(face);
 
 	sf::Sprite debugButton = spriteMap["debug"];
-	debugButton.setPosition(sf::Vector2f(WIDTH / 2 - 32.f, 16 * 32.f));
-	debugButton.move(sf::Vector2f(64 * 2, 0));
+	debugButton.setPosition(debugCoords);
 	window.draw(debugButton);
+
+	sf::Vector2f testCoords[] = {test1Coords, test2Coords};
 
 	for (int i = 1; i <= 2; i++) {
 		sf::Sprite testi = spriteMap["test_" + to_string(i)];
-		testi.setPosition(sf::Vector2f(WIDTH / 2 - 32.f, 16 * 32.f));
-		testi.move(sf::Vector2f(64 * (i + 2.f), 0.f));
+		testi.setPosition(testCoords[i - 1]);
 		window.draw(testi);
 	}
 
@@ -127,4 +134,12 @@ Graphics::Graphics(Game* g)
 	: window(sf::VideoMode(WIDTH, HEIGHT), "Minesweeper", sf::Style::Titlebar | sf::Style::Close) {
 	game = g;
 	loadSprites();
+
+	/*Load menu coords*/
+	float x_base = WIDTH / 2 - 32.f,
+		y_base = 16 * 32.f;
+	faceCoords = sf::Vector2f(x_base, y_base);
+	debugCoords = sf::Vector2f(x_base + 64 * 2, y_base);
+	test1Coords = sf::Vector2f(x_base + 64 * 3, y_base);
+	test2Coords = sf::Vector2f(x_base + 64 * 4, y_base);
 }
