@@ -1,7 +1,7 @@
 #include "Tile.h"
 
-Tile::Tile(int r, int c, std::vector<Tile*> adj) {
-	this->r = r;
-	this->c = c;
+Tile::Tile(short r, short c, std::vector<Tile*> adj) {
+	row = r;
+	col = c;
 	adjacents = adj;
 }

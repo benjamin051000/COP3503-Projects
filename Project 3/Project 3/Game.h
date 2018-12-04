@@ -7,40 +7,54 @@ using namespace std;
 class Graphics;
 
 class Game {
+	/*Connects the graphics window to the game logic.*/
 	Graphics* gameWindow;
 
 	/*Number of mines and number of tiles*/
-	const int numMines = 50, numTiles = 400;
+	const short numMines = 50, numTiles = 400;
 
+	/*Toggles off  if the window X button is 
+	pressed on the window, to stop the program.*/
 	bool running = true;
 	
 	/*Minefield of Tile objects*/
-	static const int rows = 16, cols = 25;
+	static const short rows = 16, cols = 25;
 	Tile mineField[rows][cols];
 
+	/*Main loop of the program. Listens for a 
+	click, then updates the graphics window.*/
 	void gameLoop();
 	
-	/*"Digs" a tile up and reveals its state. Checks surrounding tiles to determine state.*/
+	/*"Digs" a tile up and reveals its state. 
+	Checks surrounding tiles to determine state.*/
 	void Reveal(int r, int c);
+
+	/*Runs when a mine is clicked. Stops the game and prevents 
+	further interaction until the smiley is clicked.*/
 	void GameOver();
 
-	/*Take the coordinates of a left and right click, and trigger the appropriate response.*/
+	/*Take the coordinates of a left and right click,
+	and trigger the appropriate response.*/
 	void ProcessLeftClick();
 	void ProcessRightClick();
 	
-	/*Lays 50 random mines*/
+	/*Adds numMines random mines in mineField*/
 	void LayMines();
 
 	/*Clears all flags, mines, and revealed tiles.
 	Initializes Adjacent Tile pointers.*/
 	void ResetBoard();
 
-	/*Toggles showing the mines*/
-	void ToggleDebug();
+	/*Creates a new version of the game.*/
+	void NewGame();
 
 public:
-	/*Used for drawing the sad face, as well as preventing further tile reveals
-	after a mine is revealed.*/
+	/*Used for drawing the mines and printing out stuff
+	if enabled.*/
+	bool debug = false;
+
+	/*Used for drawing the sad face, as well as preventing 
+	further tile reveals after a mine is revealed.*/
 	bool gameover = false;
 
 	/*Prints the board in the console. 1s are mines, 0s are blanks.*/
@@ -49,12 +63,16 @@ public:
 	/*Creates a game and starts it.*/
 	Game();
 	~Game();
+	
+	/*Returns the number of rows in mineField*/
 	const int GetRows() const;
+	
+	/*Returns the number of columns in mineField*/
 	const int GetCols() const;
+	
+	/*Returns a Tile (used for graphics drawing)*/
 	Tile getTile(int r, int c) const;
 
-	/*Stops the gameLoop, terminating the game.*/
+	/*Stops gameLoop, terminating the program.*/
 	void StopRunning();
-
-	void NewGame();
 };

@@ -10,15 +10,11 @@ void Game::gameLoop() {
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 			
 			ProcessLeftClick();
-
-			/*Update graphics window.*/
 			gameWindow->update();
 		}
 		else if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
 			
 			ProcessRightClick();
-
-			/*Update graphics window.*/
 			gameWindow->update();
 		}
 
@@ -32,6 +28,7 @@ void Game::Reveal(int r, int c) {
 		GameOver();
 	}
 	else {
+
 		/*How many surrounding Tiles are mines?*/
 		short mineCount = 0;
 		for (Tile* t : mineField[r][c].adjacents) {
@@ -39,6 +36,7 @@ void Game::Reveal(int r, int c) {
 				mineCount++;
 			}
 		}
+
 		cout << "Adjacent mines: " << mineCount << endl;
 		mineField[r][c].nearbyMines = mineCount;
 
@@ -46,7 +44,7 @@ void Game::Reveal(int r, int c) {
 		if (mineField[r][c].nearbyMines == 0) {
 			for (Tile* t : mineField[r][c].adjacents) {
 				if(!t->revealed)
-					Reveal(t->r, t->c);
+					Reveal(t->row, t->col);
 			}
 		}
 
@@ -96,11 +94,11 @@ void Game::ProcessLeftClick() {
 		if (position.x > debugTL.x && position.x < debugBR.x
 			&& position.y > debugTL.y && position.y < debugBR.y) {
 			cout << "Debug button clicked!" << endl;
-			ToggleDebug();
+			debug = !debug;
 			return;
 		}
 
-
+		//TODO test buttons
 
 
 		if (gameover) { return; }
@@ -178,22 +176,8 @@ void Game::ResetBoard() {
 
 				}
 			}
-			/*Remove pointer to this Tile
-			to avoid infinite recursion*/
-			//adj.erase(adj.begin() + 4);
 
 			mineField[r][c] = Tile(r, c, adj);
-
-		}
-	}
-
-	
-}
-
-void Game::ToggleDebug() {
-	for (auto &row : mineField) {
-		for (auto &tile : row) {
-			tile.debug = !tile.debug;
 		}
 	}
 }
