@@ -21,7 +21,7 @@ void Game::gameLoop() {
 	} //end of while
 }
 
-void Game::Reveal(int r, int c) {
+void Game::Reveal(short r, short c) {
 	mineField[r][c].revealed = true;
 
 	if (mineField[r][c].mine) {
@@ -64,9 +64,7 @@ void Game::GameOver() {
 }
 
 void Game::ProcessLeftClick() {
-	
 	sf::Vector2i position = gameWindow->getMouseCoords();
-
 
 	/*Wait until LMB is released*/
 	while (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {}
@@ -100,7 +98,6 @@ void Game::ProcessLeftClick() {
 
 		//TODO test buttons
 
-
 		if (gameover) { return; }
 
 		/*Reveal tile*/
@@ -130,7 +127,7 @@ void Game::ProcessRightClick() {
 }
 
 void Game::LayMines() {
-	int minesPlaced = 0;
+	short minesPlaced = 0;
 	
 	random_device rd;
 	mt19937 rng(rd());
@@ -141,8 +138,8 @@ void Game::LayMines() {
 			/*Pick a random location. If no mine, place one.
 			If there is a mine, move to a different place.*/
 
-		int r = randRow(rng);
-		int c = randCol(rng);
+		short r = randRow(rng);
+		short c = randCol(rng);
 		
 
 		if (!mineField[r][c].mine) {

@@ -27,7 +27,7 @@ class Game {
 	
 	/*"Digs" a tile up and reveals its state. 
 	Checks surrounding tiles to determine state.*/
-	void Reveal(int r, int c);
+	void Reveal(short r, short c);
 
 	/*Runs when a mine is clicked. Stops the game and prevents 
 	further interaction until the smiley is clicked.*/

@@ -134,3 +134,6 @@ Graphics::Graphics(Game* g)
 	test1Coords = sf::Vector2f(x_base + 64 * 3, y_base);
 	test2Coords = sf::Vector2f(x_base + 64 * 4, y_base);
 }
+
+Graphics::~Graphics() {
+}

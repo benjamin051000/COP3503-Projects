@@ -29,7 +29,8 @@ class Graphics {
 
 public:
 	Graphics(Game* g);
-	
+	~Graphics();
+
 	/*Repaints window and checks if the window is X'ed out.*/
 	void update();
 
