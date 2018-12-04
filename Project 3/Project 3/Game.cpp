@@ -18,7 +18,7 @@ void Game::gameLoop() {
 			gameWindow->update();
 		}
 
-	} //end of while
+	}
 }
 
 void Game::Reveal(short r, short c) {
