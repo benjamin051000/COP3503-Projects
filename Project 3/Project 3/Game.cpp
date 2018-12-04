@@ -41,6 +41,15 @@ void Game::Reveal(int r, int c) {
 		}
 		cout << "Adjacent mines: " << mineCount << endl;
 		mineField[r][c].nearbyMines = mineCount;
+
+		/*Recursively check each adjacent tile, too.*/
+		if (mineField[r][c].nearbyMines == 0) {
+			for (Tile* t : mineField[r][c].adjacents) {
+				if(!t->revealed)
+					Reveal(t->r, t->c);
+			}
+		}
+
 	}
 }
 
@@ -173,7 +182,7 @@ void Game::ResetBoard() {
 			to avoid infinite recursion*/
 			//adj.erase(adj.begin() + 4);
 
-			mineField[r][c] = Tile(adj);
+			mineField[r][c] = Tile(r, c, adj);
 
 		}
 	}
