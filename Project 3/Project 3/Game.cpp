@@ -17,7 +17,6 @@ void Game::gameLoop() {
 			ProcessRightClick();
 			gameWindow->update();
 		}
-
 	}
 }
 
@@ -47,7 +46,6 @@ void Game::Reveal(short r, short c) {
 					Reveal(t->row, t->col);
 			}
 		}
-
 	}
 }
 

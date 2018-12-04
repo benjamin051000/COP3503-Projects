@@ -114,8 +114,9 @@ void Graphics::loadSprites() {
 	}
 
 	/*Create sprites and load them into spriteMap*/
+	sf::Sprite sprite;
 	for (map<string, sf::Texture>::iterator iter = textureMap.begin(); iter != textureMap.end(); iter++) {
-		sf::Sprite sprite(iter->second);
+		sprite = sf::Sprite(iter->second);
 		spriteMap.emplace(iter->first, sprite);
 	}
 }
