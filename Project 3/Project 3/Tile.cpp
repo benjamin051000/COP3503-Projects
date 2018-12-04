@@ -1,7 +1,5 @@
 #include "Tile.h"
 
-Tile::Tile(bool m) {
-	mine = m;
-	revealed = false;
-	flagged = false;
+Tile::Tile(std::vector<Tile*> adj) {
+	adjacents = adj;
 }

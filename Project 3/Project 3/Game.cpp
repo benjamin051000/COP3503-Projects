@@ -136,13 +136,31 @@ void Game::LayMines() {
 void Game::ResetBoard() {
 	gameover = false;
 
+	/*For each tile in mineField...*/
 	for (auto &row : mineField) {
 		for (auto &tile : row) {
-			tile.flagged = false;
-			tile.revealed = false;
-			tile.mine = false;
+			
+			/*Create a vector of adjacent Tile pointers
+			to pass to the Tile (used for revealing
+			neighboring Tiles).*/
+			vector<Tile*> adj;
+			for (int r = -1; r <= 1; r++) {
+				for (int c = -1; c <= 1; c++) {
+					try {
+						adj.push_back(&mineField[r][c]);
+					}
+					catch (exception) {
+						adj.push_back(nullptr); //necessary? It might do this without throwing
+					}
+				}
+			}
+
+			tile = Tile(adj);
+
 		}
 	}
+
+	
 }
 
 void Game::ToggleDebug() {

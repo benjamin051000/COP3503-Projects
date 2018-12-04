@@ -31,7 +31,8 @@ class Game {
 	/*Lays 50 random mines*/
 	void LayMines();
 
-	/*Clears all flags, mines, and revealed tiles.*/
+	/*Clears all flags, mines, and revealed tiles.
+	Initializes Adjacent Tile pointers.*/
 	void ResetBoard();
 
 	/*Toggles showing the mines*/
