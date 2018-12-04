@@ -31,6 +31,17 @@ void Game::Reveal(int r, int c) {
 	if (mineField[r][c].mine) {
 		GameOver();
 	}
+	else {
+		/*How many surrounding Tiles are mines?*/
+		short mineCount = 0;
+		for (Tile* t : mineField[r][c].adjacents) {
+			if (t->mine) { //randomly throws
+				mineCount++;
+			}
+		}
+		cout << "Adjacent mines: " << mineCount << endl;
+		mineField[r][c].nearbyMines = mineCount;
+	}
 }
 
 void Game::GameOver() {
@@ -53,7 +64,7 @@ void Game::ProcessLeftClick() {
 	/*Wait until LMB is released*/
 	while (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {}
 
-	if (position.x > 0 && position.y > 0) {
+	if (position.x > 0 && position.y > 0 && position.x < 800 && position.y < 600) { //any way to extract W and H from Graphics?
 		/*Check menu buttons*/
 		
 		/*Smiley face*/
@@ -65,6 +76,7 @@ void Game::ProcessLeftClick() {
 			&& position.y > smileyTL.y && position.y < smileyBR.y) {
 			cout << "Face clicked!" << endl;
 			NewGame();
+			return;
 		}
 
 		/*Debug button*/
@@ -76,6 +88,7 @@ void Game::ProcessLeftClick() {
 			&& position.y > debugTL.y && position.y < debugBR.y) {
 			cout << "Debug button clicked!" << endl;
 			ToggleDebug();
+			return;
 		}
 
 
@@ -137,25 +150,30 @@ void Game::ResetBoard() {
 	gameover = false;
 
 	/*For each tile in mineField...*/
-	for (auto &row : mineField) {
-		for (auto &tile : row) {
+	for (int r = 0; r < sizeof(mineField) / sizeof(mineField[0]); r++) {
+		for (int c = 0; c < sizeof(mineField[0]) / sizeof(mineField[0][0]); c++) {
 			
 			/*Create a vector of adjacent Tile pointers
 			to pass to the Tile (used for revealing
 			neighboring Tiles).*/
 			vector<Tile*> adj;
-			for (int r = -1; r <= 1; r++) {
-				for (int c = -1; c <= 1; c++) {
-					try {
-						adj.push_back(&mineField[r][c]);
+			for (int adjr = -1; adjr <= 1; adjr++) {
+				for (int adjc = -1; adjc <= 1; adjc++) {
+
+					int ar = r + adjr, ac = c + adjc;
+
+					/*Don't include nullptrs*/
+					if (ar >= 0 && ar < rows && ac >= 0 && ac < cols) {
+						adj.push_back(&mineField[ar][ac]);
 					}
-					catch (exception) {
-						adj.push_back(nullptr); //necessary? It might do this without throwing
-					}
+
 				}
 			}
+			/*Remove pointer to this Tile
+			to avoid infinite recursion*/
+			//adj.erase(adj.begin() + 4);
 
-			tile = Tile(adj);
+			mineField[r][c] = Tile(adj);
 
 		}
 	}

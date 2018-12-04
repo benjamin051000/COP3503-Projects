@@ -43,18 +43,16 @@ void Graphics::repaint() {
 			/*Overlay mines, flags, and numbers*/
 			if (tile.flagged) {
 				tileSprite = spriteMap["flag"];
-				tileSprite.setPosition(sf::Vector2f(32.f * c, 32.f * r));
-				window.draw(tileSprite);
 			}
 			else if ((tile.revealed || tile.debug) && tile.mine) {
 				tileSprite = spriteMap["mine"];
-				tileSprite.setPosition(sf::Vector2f(32.f * c, 32.f * r));
-				window.draw(tileSprite);
 			}
 			else {
 				/*Display number of adjacent mines*/
+				tileSprite = spriteMap["number_" + to_string(tile.nearbyMines)];
 			}
-
+			tileSprite.setPosition(sf::Vector2f(32.f * c, 32.f * r));
+			window.draw(tileSprite);
 		}
 	}
 
