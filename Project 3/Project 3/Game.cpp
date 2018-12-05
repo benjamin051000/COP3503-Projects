@@ -250,7 +250,8 @@ void Game::StopRunning() {
 }
 
 unsigned short Game::GetMinesLeft() const {
-	unsigned short minesLeft = 50;
+	short minesLeft = vecOfMinePtrs.size();
+
 	for (Tile* tile : vecOfMinePtrs) {
 		if (tile->flagged) {
 			minesLeft--;
@@ -304,26 +305,21 @@ void Game::LoadFromFile(string filename) {
 
 	while (getline(file, line, '\n')) {
 		for (int i = 0; i < line.length(); i++) {
-			cout << line.at(i) << endl;
 			minesFromFile[i] = line.at(i);
 		}
 
 		for (int col = 0; col < cols; col++) {
-			mineField[row][col].mine = minesFromFile[col] == '1' ? true : false;
-			cout << mineField[row][col].mine << endl;
+			if (minesFromFile[col] == '1') {
+				mineField[row][col].mine = true;
+				vecOfMinePtrs.push_back(&mineField[row][col]);
+			}
+			else {
+				mineField[row][col].mine = false;
+			}
 
 		}
 		row++;
 	}
-
-	/*if (!mineField[r][c].mine) {
-		mineField[r][c].mine = true;
-		minesPlaced++;
-		vecOfMinePtrs.push_back(&mineField[r][c]);
-
-		cout << "Placed mine " << minesPlaced << endl;
-	}*/
-
 
 	PrintBoard();
 	gameLoop();
