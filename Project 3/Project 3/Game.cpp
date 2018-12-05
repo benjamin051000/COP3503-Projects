@@ -174,7 +174,7 @@ void Game::LayMines() {
 			minesPlaced++;
 			vecOfMinePtrs.push_back(&mineField[r][c]);
 
-			cout << "Placed mine " << minesPlaced << endl;
+			//cout << "Placed mine " << minesPlaced << endl;
 		}
 	}
 }
