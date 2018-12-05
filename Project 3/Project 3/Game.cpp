@@ -31,7 +31,7 @@ void Game::Reveal(short r, short c) {
 		/*How many surrounding Tiles are mines?*/
 		short mineCount = 0;
 		for (Tile* t : mineField[r][c].adjacents) {
-			if (t->mine) { //randomly throws
+			if (t->mine) { //throws
 				mineCount++;
 			}
 		}
@@ -84,8 +84,33 @@ void Game::ProcessLeftClick() {
 			return;
 		}
 
-		//TODO test buttons
-		
+		/*Test_1*/
+		sf::Vector2i test1TL(gameWindow->test1Coords),
+				test1BR(gameWindow->test1Coords);
+		test1BR += sf::Vector2i(64, 64);
+
+		if (position.x > test1TL.x && position.x < test1BR.x
+			&& position.y > test1TL.y && position.y < test1BR.y) {
+			cout << "Test_1 clicked!" << endl;
+			LoadFromFile("boards\\testboard.brd");
+			return;
+		}
+
+		/*Test_2*/
+		sf::Vector2i test2TL(gameWindow->test2Coords),
+			test2BR(gameWindow->test2Coords);
+		test2BR += sf::Vector2i(64, 64);
+
+		if (position.x > test2TL.x && position.x < test2BR.x
+			&& position.y > test2TL.y && position.y < test2BR.y) {
+			cout << "Test_2 clicked!" << endl;
+			LoadFromFile("boards\\testboard2.brd");
+			return;
+		}
+
+		/*Guards against anything except
+		the above buttons to be pressed
+		when the game is over (win or loss).*/
 		if (gameover) { return; }
 		
 		/*Debug button*/
@@ -101,9 +126,11 @@ void Game::ProcessLeftClick() {
 		}
 		
 		/*Reveal tile*/
-		int r = position.y / 32, c = position.x / 32;
-		if (!mineField[r][c].flagged) {
-			Reveal(r, c); //y is row, x is col
+		if (position.y < rows * 32) {
+			int r = position.y / 32, c = position.x / 32;
+			if (!mineField[r][c].flagged) {
+				Reveal(r, c); //y is row, x is col
+			}
 		}
 	}
 }
@@ -158,8 +185,8 @@ void Game::ResetBoard() {
 	vecOfMinePtrs.clear();
 
 	/*For each tile in mineField...*/
-	for (int r = 0; r < sizeof(mineField) / sizeof(mineField[0]); r++) {
-		for (int c = 0; c < sizeof(mineField[0]) / sizeof(mineField[0][0]); c++) {
+	for (int r = 0; r < /*sizeof(mineField) / sizeof(mineField[0])*/ rows; r++) {
+		for (int c = 0; c < /*sizeof(mineField[0]) / sizeof(mineField[0][0])*/ cols; c++) {
 			
 			/*Create a vector of adjacent Tile pointers
 			to pass to the Tile (used for revealing
@@ -178,6 +205,7 @@ void Game::ResetBoard() {
 				}
 			}
 
+			/*Resets all other tile attributes*/
 			mineField[r][c] = Tile(r, c, adj);
 		}
 	}
@@ -254,6 +282,48 @@ bool Game::WinCondition() {
 void Game::NewGame() {
 	ResetBoard();
 	LayMines();
+
+	PrintBoard();
+	gameLoop();
+}
+
+void Game::LoadFromFile(string filename) {
+	ResetBoard();
+
+	ifstream file;
+	file.open(filename);
+
+	if (!file.is_open()) {
+		cout << "Failed to open " << filename << endl;
+	}
+
+	/*These are coincidentally the same length*/
+	string line;
+	char minesFromFile[cols];
+	int row = 0;
+
+	while (getline(file, line, '\n')) {
+		for (int i = 0; i < line.length(); i++) {
+			cout << line.at(i) << endl;
+			minesFromFile[i] = line.at(i);
+		}
+
+		for (int col = 0; col < cols; col++) {
+			mineField[row][col].mine = minesFromFile[col] == '1' ? true : false;
+			cout << mineField[row][col].mine << endl;
+
+		}
+		row++;
+	}
+
+	/*if (!mineField[r][c].mine) {
+		mineField[r][c].mine = true;
+		minesPlaced++;
+		vecOfMinePtrs.push_back(&mineField[r][c]);
+
+		cout << "Placed mine " << minesPlaced << endl;
+	}*/
+
 
 	PrintBoard();
 	gameLoop();

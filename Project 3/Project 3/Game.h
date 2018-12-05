@@ -1,6 +1,8 @@
 #pragma once
 #include <iostream>
 #include <random>
+#include <fstream>
+#include <string>
 #include "Tile.h"
 using namespace std;
 
@@ -51,6 +53,10 @@ class Game {
 
 	/*Creates a new version of the game.*/
 	void NewGame();
+
+	/*Loads test file.*/
+	void LoadFromFile(string filename);
+
 
 public:
 	/*Used for drawing the mines and printing out stuff
