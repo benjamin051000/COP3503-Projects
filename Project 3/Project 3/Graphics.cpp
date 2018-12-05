@@ -27,7 +27,7 @@ void Graphics::repaint() {
 		for (int c = 0; c < game->GetCols(); c++) {
 			
 			/*offset by 32 pixels each iteration*/
-			Tile tile = game->getTile(r, c); //Get a pointer? for speed or nah
+			Tile tile = game->getTile(r, c);
 			sf::Sprite tileSprite;
 
 			if (tile.revealed) {
@@ -43,36 +43,55 @@ void Graphics::repaint() {
 			/*Overlay mines, flags, and numbers*/
 			if (tile.flagged) {
 				tileSprite = spriteMap["flag"];
-				tileSprite.setPosition(sf::Vector2f(32.f * c, 32.f * r));
-				window.draw(tileSprite);
 			}
-			else if (tile.revealed && tile.mine) {
+			else if ((tile.revealed || game->debug) && tile.mine) {
 				tileSprite = spriteMap["mine"];
-				tileSprite.setPosition(sf::Vector2f(32.f * c, 32.f * r));
-				window.draw(tileSprite);
 			}
 			else {
 				/*Display number of adjacent mines*/
+				tileSprite = spriteMap["number_" + to_string(tile.nearbyMines)];
 			}
 
+			tileSprite.setPosition(sf::Vector2f(32.f * c, 32.f * r));
+			window.draw(tileSprite);
 		}
 	}
 
-	/*Draw bottom sprites*/	//This could be looped with an array of strings and ints or something, lessens number of sprites in mem (?)
-	sf::Sprite face = spriteMap["face_happy"];
-	face.setPosition(sf::Vector2f(WIDTH / 2 - 32, 16 * 32)); //Is this an acceptable position for the face?
+	/*Draw MinesLeft numbers*/
+	sf::Sprite minesLeftTens, minesLeftOnes;
+	unsigned short minesLeft = game->GetMinesLeft();
+	short tensDigitBegin, onesDigitBegin;
+
+	tensDigitBegin = minesLeft / 10 * 21;
+	onesDigitBegin = minesLeft % 10 * 21;
+
+	minesLeftTens = spriteMap["digits"];
+	minesLeftTens.setTextureRect(sf::IntRect(tensDigitBegin, 0, 21, 32));
+	minesLeftTens.setPosition(numberCoordsTens);
+	window.draw(minesLeftTens);
+
+	minesLeftOnes = spriteMap["digits"];
+	minesLeftOnes.setTextureRect(sf::IntRect(onesDigitBegin, 0, 21, 32));
+	minesLeftOnes.setPosition(numberCoordsOnes);
+	window.draw(minesLeftOnes);
+
+
+	/*Draw bottom sprites*/
+	sf::Sprite face = game->WinCondition() ? spriteMap["face_win"] : //goes to next line
+						game->gameover ? spriteMap["face_lose"] : spriteMap["face_happy"];
+
+	face.setPosition(faceCoords);
 	window.draw(face);
 
-	sf::Sprite debugButton = spriteMap["debug"];
-	debugButton.setPosition(sf::Vector2f(WIDTH / 2 - 32, 16 * 32));
-	debugButton.move(sf::Vector2f(64 * 2, 0));
-	window.draw(debugButton);
+	pair<sf::Sprite*, sf::Vector2f*> menuOpts[3];
+	menuOpts[0] = pair<sf::Sprite*, sf::Vector2f*>(&spriteMap["debug"], &debugCoords);
+	menuOpts[1] = pair<sf::Sprite*, sf::Vector2f*>(&spriteMap["test_1"], &test1Coords);
+	menuOpts[2] = pair<sf::Sprite*, sf::Vector2f*>(&spriteMap["test_2"], &test2Coords);
 
-	for (int i = 1; i <= 2; i++) {
-		sf::Sprite testi = spriteMap["test_" + to_string(i)];
-		testi.setPosition(sf::Vector2f(WIDTH / 2 - 32, 16 * 32));
-		testi.move(sf::Vector2f(64 * (i + 2), 0));
-		window.draw(testi);
+	for (pair<sf::Sprite*, sf::Vector2f*> buttonTemp : menuOpts) {
+		sf::Sprite button = *buttonTemp.first;
+		button.setPosition(*buttonTemp.second);
+		window.draw(button);
 	}
 
 	/*Finally, display the window*/
@@ -84,16 +103,16 @@ void Graphics::loadSprites() {
 	string imageFileNames[] = { "mine.png", "tile_hidden.png", "tile_revealed.png",
 						"flag.png",	"face_happy.png", "face_win.png", "face_lose.png",
 						"digits.png", "debug.png", "test_1.png", "test_2.png" };
-
+	
+	sf::Texture texture;
 	for (string imageName : imageFileNames) {
 		string imageTitle = imageName.substr(0, imageName.find("."));
-
-		sf::Texture texture;
+		
 		if (!texture.loadFromFile("images\\" + imageName)) {
 			//sfml automatically outputs errors
 		}
 
-		texture.setSmooth(true); //Should we be smoothing here?
+		texture.setSmooth(true); 
 		textureMap.emplace(imageTitle, texture);
 	}
 
@@ -106,19 +125,19 @@ void Graphics::loadSprites() {
 
 		string imageTitle = imageFileName.substr(0, imageFileName.find("."));
 
-		sf::Texture texture;
+		/*sf::Texture texture;*/
 		if (!texture.loadFromFile("images\\" + imageFileName)) {
 			//sfml automatically outputs errors
 		}
 
-		texture.setSmooth(true); //Should we be smoothing here?
+		texture.setSmooth(true);
 		textureMap.emplace(imageTitle, texture);
 	}
 
-
 	/*Create sprites and load them into spriteMap*/
+	sf::Sprite sprite;
 	for (map<string, sf::Texture>::iterator iter = textureMap.begin(); iter != textureMap.end(); iter++) {
-		sf::Sprite sprite(iter->second);
+		sprite = sf::Sprite(iter->second);
 		spriteMap.emplace(iter->first, sprite);
 	}
 }
@@ -126,5 +145,19 @@ void Graphics::loadSprites() {
 Graphics::Graphics(Game* g)
 	: window(sf::VideoMode(WIDTH, HEIGHT), "Minesweeper", sf::Style::Titlebar | sf::Style::Close) {
 	game = g;
+
 	loadSprites();
+
+	/*Load menu coords*/
+	float x_base = WIDTH / 2 - 32.f,
+		y_base = 16 * 32.f;
+	faceCoords = sf::Vector2f(x_base, y_base);
+	debugCoords = sf::Vector2f(x_base + 64 * 2, y_base);
+	test1Coords = sf::Vector2f(x_base + 64 * 3, y_base);
+	test2Coords = sf::Vector2f(x_base + 64 * 4, y_base);
+	numberCoordsTens = sf::Vector2f(0, y_base);
+	numberCoordsOnes = sf::Vector2f(21, y_base);
+}
+
+Graphics::~Graphics() {
 }
