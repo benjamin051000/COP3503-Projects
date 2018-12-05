@@ -41,5 +41,7 @@ public:
 	sf::Vector2f faceCoords,
 				 debugCoords,
 				 test1Coords,
-				 test2Coords;
+				 test2Coords,
+				 numberCoordsTens,
+				 numberCoordsOnes;
 };

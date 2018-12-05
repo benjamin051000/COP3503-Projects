@@ -46,6 +46,8 @@ void Game::Reveal(short r, short c) {
 					Reveal(t->row, t->col);
 			}
 		}
+
+		WinCondition();
 	}
 }
 
@@ -82,6 +84,10 @@ void Game::ProcessLeftClick() {
 			return;
 		}
 
+		//TODO test buttons
+		
+		if (gameover) { return; }
+		
 		/*Debug button*/
 		sf::Vector2i debugTL(gameWindow->debugCoords),
 			debugBR(gameWindow->debugCoords);
@@ -93,11 +99,7 @@ void Game::ProcessLeftClick() {
 			debug = !debug;
 			return;
 		}
-
-		//TODO test buttons
-
-		if (gameover) { return; }
-
+		
 		/*Reveal tile*/
 		int r = position.y / 32, c = position.x / 32;
 		if (!mineField[r][c].flagged) {
@@ -143,6 +145,8 @@ void Game::LayMines() {
 		if (!mineField[r][c].mine) {
 			mineField[r][c].mine = true;
 			minesPlaced++;
+			vecOfMinePtrs.push_back(&mineField[r][c]);
+
 			cout << "Placed mine " << minesPlaced << endl;
 		}
 	}
@@ -150,6 +154,8 @@ void Game::LayMines() {
 
 void Game::ResetBoard() {
 	gameover = false;
+
+	vecOfMinePtrs.clear();
 
 	/*For each tile in mineField...*/
 	for (int r = 0; r < sizeof(mineField) / sizeof(mineField[0]); r++) {
@@ -213,6 +219,36 @@ Tile Game::getTile(int r, int c) const {
 
 void Game::StopRunning() {
 	running = false;
+}
+
+unsigned short Game::GetMinesLeft() const {
+	unsigned short minesLeft = 50;
+	for (Tile* tile : vecOfMinePtrs) {
+		if (tile->flagged) {
+			minesLeft--;
+		}
+	}
+	return minesLeft;
+}
+
+bool Game::WinCondition() {
+	for (auto & row : mineField) {
+		for (auto & tile : row) {
+			if (!tile.mine && !tile.revealed) {
+				return false;
+			}
+		}
+	}
+	/*YOU WON!!!*/
+	for (auto & row : mineField) {
+		for (auto & tile : row) {
+			if (tile.mine) {
+				tile.flagged = true;
+				GameOver();
+			}
+		}
+	}
+	return true;
 }
 
 void Game::NewGame() {

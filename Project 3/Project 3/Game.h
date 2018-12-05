@@ -21,6 +21,10 @@ class Game {
 	static const short rows = 16, cols = 25;
 	Tile mineField[rows][cols];
 
+	/*Used in GetMinesLeft to quickly determine which
+	mines have been flagged.*/
+	vector<Tile*> vecOfMinePtrs;
+
 	/*Main loop of the program. Listens for a 
 	click, then updates the graphics window.*/
 	void gameLoop();
@@ -75,4 +79,12 @@ public:
 
 	/*Stops gameLoop, terminating the program.*/
 	void StopRunning();
+
+	/*Used for win condition and drawing of 
+	minesLeft numbers in bottom left corner.*/
+	unsigned short GetMinesLeft() const;
+
+	/*Checks if the win condition is met:
+	All non-mine tiles must be revealed.*/
+	bool WinCondition();
 };

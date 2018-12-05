@@ -57,8 +57,29 @@ void Graphics::repaint() {
 		}
 	}
 
+	/*Draw MinesLeft numbers*/
+	sf::Sprite minesLeftTens, minesLeftOnes;
+	unsigned short minesLeft = game->GetMinesLeft();
+	short tensDigitBegin, onesDigitBegin;
+
+	tensDigitBegin = minesLeft / 10 * 21;
+	onesDigitBegin = minesLeft % 10 * 21;
+
+	minesLeftTens = spriteMap["digits"];
+	minesLeftTens.setTextureRect(sf::IntRect(tensDigitBegin, 0, 21, 32));
+	minesLeftTens.setPosition(numberCoordsTens);
+	window.draw(minesLeftTens);
+
+	minesLeftOnes = spriteMap["digits"];
+	minesLeftOnes.setTextureRect(sf::IntRect(onesDigitBegin, 0, 21, 32));
+	minesLeftOnes.setPosition(numberCoordsOnes);
+	window.draw(minesLeftOnes);
+
+
 	/*Draw bottom sprites*/
-	sf::Sprite face = game->gameover ? spriteMap["face_lose"] : spriteMap["face_happy"];
+	sf::Sprite face = game->WinCondition() ? spriteMap["face_win"] : //goes to next line
+						game->gameover ? spriteMap["face_lose"] : spriteMap["face_happy"];
+
 	face.setPosition(faceCoords);
 	window.draw(face);
 
@@ -134,6 +155,8 @@ Graphics::Graphics(Game* g)
 	debugCoords = sf::Vector2f(x_base + 64 * 2, y_base);
 	test1Coords = sf::Vector2f(x_base + 64 * 3, y_base);
 	test2Coords = sf::Vector2f(x_base + 64 * 4, y_base);
+	numberCoordsTens = sf::Vector2f(0, y_base);
+	numberCoordsOnes = sf::Vector2f(21, y_base);
 }
 
 Graphics::~Graphics() {
