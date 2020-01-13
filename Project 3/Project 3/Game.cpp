@@ -53,7 +53,7 @@ void Game::Reveal(short r, short c) {
 
 void Game::GameOver() {
 	gameover = true;
-	//cout << "Game over!" << endl;
+	cout << "Game over!" << endl;
 	for (auto& row : mineField) {
 		for (Tile& tile : row) {
 			if (tile.mine && !tile.flagged) {
